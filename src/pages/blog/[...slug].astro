@@ -15,16 +15,12 @@ const { Content } = await render(post);
 
 function getCategoryLabel(category: string) {
   switch (category) {
-    case 'resident_spotlight':
-      return '岛民一日 · 特约共创';
-    case 'governance':
-      return '治岛手记';
-    case 'reading_digest':
-      return '窗外阅影 · 读书札记';
-    case 'dialogue':
-      return '神隐对谈 · 哲学思辨';
-    default:
-      return '随笔';
+    case 'island_chronicle':
+      return '岛屿纪事';
+    case 'cross_reflections':
+      return '他山之石';
+    case 'mayor_essay':
+      return '市长随笔';
   }
 }
 ---
@@ -41,12 +37,6 @@ function getCategoryLabel(category: string) {
         <span class="px-2 py-0.5 rounded bg-[#f4efe6] dark:bg-[#1f1f24] text-[#736b5e] dark:text-[#a09e99]">
           {getCategoryLabel(post.data.category)}
         </span>
-        {post.data.island_epoch && (
-          <>
-            <span>·</span>
-            <span>{post.data.island_epoch}</span>
-          </>
-        )}
       </div>
 
       <h1 class="text-2xl sm:text-4xl font-serif font-bold text-[#1a1a1a] dark:text-white leading-tight">
@@ -65,12 +55,29 @@ function getCategoryLabel(category: string) {
                 本期特约主笔：{post.data.guest_author}
               </div>
               <div class="text-xs text-[#7d776c] dark:text-[#9e998e] mt-0.5">
-                {post.data.resident_snapshot.occupation || '岛民'} · {post.data.resident_snapshot.mbti || '居民'}
+                {post.data.resident_snapshot.occupation || '岛民'}
               </div>
             </div>
           </div>
           <div class="text-xs font-serif text-amber-900 dark:text-amber-300 px-3 py-1 bg-amber-100/60 dark:bg-amber-950/40 rounded-full">
-            共创专栏
+            岛屿纪事
+          </div>
+        </div>
+      )}
+
+      <!-- 他山之石：原文引用卡片 -->
+      {post.data.reference_post?.title && (
+        <div class="mt-6 p-4 rounded-xl bg-[#f7f4ed] dark:bg-[#1c1c20] border border-[#e8e2d5] dark:border-[#2e2e36] flex items-center justify-between">
+          <div>
+            <div class="text-xs text-[#7d776c] dark:text-[#9e998e]">
+              回应外部博文 · 原文作者：{post.data.reference_post.author || '博友'}（{post.data.reference_post.blog_name || '独立博客'}）
+            </div>
+            <a href={post.data.reference_post.url || '#'} target="_blank" rel="noopener noreferrer" class="text-sm font-serif font-bold text-amber-900 dark:text-amber-300 hover:underline mt-1 block">
+              《{post.data.reference_post.title}》 ↗
+            </a>
+          </div>
+          <div class="text-xs font-serif text-amber-900 dark:text-amber-300 px-3 py-1 bg-amber-100/60 dark:bg-amber-950/40 rounded-full">
+            他山之石
           </div>
         </div>
       )}

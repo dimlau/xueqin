@@ -4,7 +4,7 @@ interface Props {
   description?: string;
 }
 
-const { title, description = '甄仁岛市长公孙雅的个人手札、阅读感悟与岛民共创专栏' } = Astro.props;
+const { title, description = '甄仁岛·学勤网 — 记录微型乌托邦治理实践、思想火种与岛民人生。' } = Astro.props;
 ---
 
 <!doctype html>
@@ -14,29 +14,26 @@ const { title, description = '甄仁岛市长公孙雅的个人手札、阅读�
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="generator" content={Astro.generator} />
-    <title>{title} | 公孙雅博客</title>
+    <title>{title} | 甄仁岛·学勤网</title>
     <meta name="description" content={description} />
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;400;600;700&display=swap" rel="stylesheet">
   </head>
   <body class="bg-[#fcfbf9] dark:bg-[#121214] text-[#2b2b2b] dark:text-[#d1d1d6] min-h-screen font-sans antialiased selection:bg-[#dfd7ca] dark:selection:bg-[#383734]">
     <div class="max-w-3xl mx-auto px-6 py-12 flex flex-col min-h-screen">
       <!-- 头部导航 -->
-      <header class="flex items-center justify-between pb-8 mb-10 border-b border-[#ece8e1] dark:border-[#26262a]">
+      <header class="flex flex-col sm:flex-row sm:items-center justify-between pb-8 mb-10 border-b border-[#ece8e1] dark:border-[#26262a] gap-4">
         <div>
-          <a href="/" class="text-2xl font-serif font-bold tracking-wider text-[#1a1a1a] dark:text-white hover:opacity-80 transition">
-            公孙雅
+          <a href="/" class="text-2xl font-serif font-bold tracking-wider text-[#1a1a1a] dark:text-white hover:opacity-80 transition flex items-center gap-2">
+            <span>甄仁岛·学勤网</span>
           </a>
           <span class="block text-xs font-mono text-[#8a8a8e] mt-1 tracking-widest">
-            EASTWORLD MAYOR'S NOTEBOOK
+            智识新陈代谢与数字海岛文存
           </span>
         </div>
-        <nav class="flex items-center gap-6 text-sm font-serif">
-          <a href="/" class="hover:text-amber-800 dark:hover:text-amber-400 transition">文存</a>
-          <a href="/spotlight" class="hover:text-amber-800 dark:hover:text-amber-400 transition">岛民一日</a>
-          <a href="/about" class="hover:text-amber-800 dark:hover:text-amber-400 transition">关于</a>
-        </nav>
+        <nav class="flex flex-wrap items-center gap-5 text-sm font-serif">
+          <a href="/chronicle" class="hover:text-amber-800 dark:hover:text-amber-400 transition">岛屿纪事</a>
+          <a href="/reflections" class="hover:text-amber-800 dark:hover:text-amber-400 transition">他山之石</a>
+          <a href="/essays" class="hover:text-amber-800 dark:hover:text-amber-400 transition">市长随笔</a>
+          </nav>
       </header>
 
       <!-- 主体内容 -->
@@ -47,7 +44,7 @@ const { title, description = '甄仁岛市长公孙雅的个人手札、阅读�
       <!-- 页脚 -->
       <footer class="mt-20 pt-8 border-t border-[#ece8e1] dark:border-[#26262a] text-center text-xs text-[#8a8a8e] font-serif leading-relaxed">
         <p>甄仁岛市政厅 · 公孙雅 谨识</p>
-        <p class="mt-1">Powered by EastWorld Cognitive Engine & Astro · Hosted on Cloudflare Pages</p>
+        <p class="mt-1">甄仁岛·学勤网 · Powered by EastWorld · Hosted on Cloudflare Pages</p>
       </footer>
     </div>
   </body>

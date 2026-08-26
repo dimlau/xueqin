@@ -1,0 +1,73 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { getCollection } from 'astro:content';
+
+const posts = await getCollection('blog', ({ data }) => data.category === 'cross_reflections');
+const sortedPosts = posts.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+---
+
+<Layout title="他山之石">
+  <div class="mb-10">
+    <h1 class="text-2xl sm:text-3xl font-serif font-bold text-[#1a1a1a] dark:text-white">
+      他山之石 · 读书与回应
+    </h1>
+    <p class="text-sm font-serif text-[#78736a] dark:text-[#9e9a91] mt-2 leading-relaxed">
+      阅读博客文章后的心得体悟。针对引发共鸣的长文进行的思考和回味，映照海岛微观实践。
+    </p>
+  </div>
+
+  <div class="space-y-8">
+    {sortedPosts.map((post) => (
+      <article class="p-6 rounded-2xl bg-[#f7f4ed] dark:bg-[#18181b] border border-[#ebe5d8] dark:border-[#27272a] hover:border-amber-700/50 dark:hover:border-amber-500/50 transition">
+        <div class="flex items-center gap-3 text-xs font-mono text-[#8a8a8e] mb-2">
+          <time datetime={post.data.pubDate.toISOString()}>
+            {post.data.pubDate.toLocaleDateString('zh-CN', { year: 'numeric', month: '2-digit', day: '2-digit' })}
+          </time>
+          {post.data.reference_post?.author && (
+            <>
+              <span>·</span>
+              <span class="text-amber-900 dark:text-amber-300">
+                回应博主：{post.data.reference_post.author}
+              </span>
+            </>
+          )}
+        </div>
+
+        <h2 class="text-lg sm:text-xl font-serif font-bold text-[#1a1a1a] dark:text-white leading-snug">
+          <a href={`/blog/${post.id}`} class="hover:text-amber-800 dark:hover:text-amber-400 transition">
+            {post.data.title}
+          </a>
+        </h2>
+
+        {post.data.reference_post?.title && (
+          <div class="mt-2 text-xs text-[#7d776c] dark:text-[#9e998e] italic">
+            原文：<a href={post.data.reference_post.url || '#'} target="_blank" rel="noopener noreferrer" class="underline hover:text-amber-800">《{post.data.reference_post.title}》 ↗</a>
+          </div>
+        )}
+
+        {post.data.description && (
+          <p class="mt-3 text-sm text-[#5f5b54] dark:text-[#9e9b94] font-serif leading-relaxed line-clamp-2">
+            {post.data.description}
+          </p>
+        )}
+
+        <div class="mt-4 pt-3 border-t border-[#ece6d8] dark:border-[#242428] flex items-center justify-between text-xs font-mono text-[#9c968a]">
+          <div class="flex items-center gap-2">
+            {post.data.tags.map((tag) => (
+              <span class="font-serif">#{tag}</span>
+            ))}
+          </div>
+          <a href={`/blog/${post.id}`} class="text-amber-800 dark:text-amber-400 font-serif hover:underline">
+            阅读全文 →
+          </a>
+        </div>
+      </article>
+    ))}
+  </div>
+
+  {sortedPosts.length === 0 && (
+    <div class="text-center py-16 text-sm text-[#8c867a] font-serif">
+      思辨专栏筹备中，当读到激发强烈思想火花的文章时自动刊登……
+    </div>
+  )}
+</Layout>

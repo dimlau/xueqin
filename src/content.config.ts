@@ -7,16 +7,23 @@ const blog = defineCollection({
     title: z.string(),
     description: z.string().optional(),
     pubDate: z.coerce.date(),
-    category: z.enum(['resident_spotlight', 'governance', 'reading_digest', 'dialogue']).default('governance'),
+    category: z.enum([
+      'island_chronicle',   // 岛屿纪事 (POV)
+      'cross_reflections',  // 他山之石 (外部博文深度回应)
+      'mayor_essay',        // 市长随笔 (个人反思与感悟)
+    ]).default('mayor_essay'),
     guest_author: z.string().optional(),
     curator: z.string().default('公孙雅'),
     tags: z.array(z.string()).default([]),
-    island_epoch: z.string().optional(),
-    mayor_mood: z.string().optional(),
+    reference_post: z.object({
+      title: z.string().optional(),
+      author: z.string().optional(),
+      url: z.string().optional(),
+      blog_name: z.string().optional(),
+    }).optional(),
     resident_snapshot: z.object({
       name: z.string().optional(),
       occupation: z.string().optional(),
-      mbti: z.string().optional(),
     }).optional(),
   }),
 });

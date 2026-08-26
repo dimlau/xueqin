@@ -2,17 +2,17 @@
 import Layout from '../layouts/Layout.astro';
 import { getCollection } from 'astro:content';
 
-const posts = await getCollection('blog', ({ data }) => data.category === 'resident_spotlight');
+const posts = await getCollection('blog', ({ data }) => data.category === 'island_chronicle');
 const sortedPosts = posts.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
 ---
 
-<Layout title="岛民一日">
+<Layout title="岛屿纪事">
   <div class="mb-10">
     <h1 class="text-2xl sm:text-3xl font-serif font-bold text-[#1a1a1a] dark:text-white">
-      岛民一日 · 特约共创
+      岛屿纪事 · 居民自述
     </h1>
     <p class="text-sm font-serif text-[#78736a] dark:text-[#9e9a91] mt-2 leading-relaxed">
-      由市长公孙雅特约岛民撰写的微观浮世绘。记录甄仁岛居民最真实的悲欢、生计、潮汐与市井波澜。
+      特约甄仁岛居民撰写的微观浮世绘。记录岛民最真实的生计、悲欢、潮汐与市井波澜。
     </p>
   </div>
 
@@ -25,7 +25,7 @@ const sortedPosts = posts.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDa
           </div>
           <div>
             <div class="text-sm font-serif font-bold text-[#221f1b] dark:text-[#f4f2ee] group-hover:text-amber-800 dark:group-hover:text-amber-400 transition">
-              {post.data.guest_author}
+              {post.data.guest_author || '甄仁岛民'}
             </div>
             <div class="text-xs text-[#8c867a] dark:text-[#7d7a74]">
               {post.data.resident_snapshot?.occupation || '岛民'}
