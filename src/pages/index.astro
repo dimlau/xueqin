@@ -1,0 +1,77 @@
+---
+import Layout from '../layouts/Layout.astro';
+import IslandStatusBadge from '../components/IslandStatusBadge.astro';
+import { getCollection } from 'astro:content';
+
+const posts = await getCollection('blog');
+const sortedPosts = posts.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+
+const latestPost = sortedPosts[0];
+const mood = latestPost?.data.mayor_mood || '沉静温和';
+const epoch = latestPost?.data.island_epoch || '甄仁岛纪元 3 年';
+
+function getCategoryLabel(category: string) {
+  switch (category) {
+    case 'resident_spotlight':
+      return '岛民共创';
+    case 'governance':
+      return '治岛手记';
+    case 'reading_digest':
+      return '窗外阅影';
+    case 'dialogue':
+      return '神隐对谈';
+    default:
+      return '随笔';
+  }
+}
+---
+
+<Layout title="文存">
+  <IslandStatusBadge mood={mood} epoch={epoch} />
+
+  <section class="mb-12">
+    <p class="text-base sm:text-lg font-serif text-[#4a4742] dark:text-[#b3b0a6] leading-relaxed italic">
+      「于虚拟之海安顿肉身，在文字之野重构灵魂。这里记录着这方小岛的治理实践、外部世界的思想火种，以及那些岛民们真实滚烫的一日。」
+    </p>
+  </section>
+
+  <section class="space-y-10">
+    {sortedPosts.map((post) => (
+      <article class="group relative pb-8 border-b border-[#f0ece4] dark:border-[#1f1f24]">
+        <div class="flex items-center gap-3 text-xs font-mono text-[#8a8a8e] mb-2">
+          <time datetime={post.data.pubDate.toISOString()}>
+            {post.data.pubDate.toLocaleDateString('zh-CN', { year: 'numeric', month: '2-digit', day: '2-digit' })}
+          </time>
+          <span>·</span>
+          <span class="px-2 py-0.5 rounded bg-[#f4efe6] dark:bg-[#1f1f24] text-[#736b5e] dark:text-[#a09e99]">
+            {getCategoryLabel(post.data.category)}
+          </span>
+          {post.data.guest_author && (
+            <>
+              <span>·</span>
+              <span class="text-amber-800 dark:text-amber-400">主笔：{post.data.guest_author}</span>
+            </>
+          )}
+        </div>
+
+        <h2 class="text-xl sm:text-2xl font-serif font-bold text-[#1a1a1a] dark:text-white group-hover:text-amber-800 dark:group-hover:text-amber-400 transition leading-snug">
+          <a href={`/blog/${post.id}`}>
+            {post.data.title}
+          </a>
+        </h2>
+
+        {post.data.description && (
+          <p class="mt-3 text-sm text-[#5f5b54] dark:text-[#9e9b94] font-serif leading-relaxed line-clamp-2">
+            {post.data.description}
+          </p>
+        )}
+
+        <div class="mt-4 flex items-center gap-2">
+          {post.data.tags.map((tag) => (
+            <span class="text-xs text-[#8a8a8e] font-serif">#{tag}</span>
+          ))}
+        </div>
+      </article>
+    ))}
+  </section>
+</Layout>

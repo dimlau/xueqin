@@ -1,0 +1,59 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { getCollection } from 'astro:content';
+
+const posts = await getCollection('blog', ({ data }) => data.category === 'resident_spotlight');
+const sortedPosts = posts.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+---
+
+<Layout title="岛民一日">
+  <div class="mb-10">
+    <h1 class="text-2xl sm:text-3xl font-serif font-bold text-[#1a1a1a] dark:text-white">
+      岛民一日 · 特约共创
+    </h1>
+    <p class="text-sm font-serif text-[#78736a] dark:text-[#9e9a91] mt-2 leading-relaxed">
+      由市长公孙雅特约岛民撰写的微观浮世绘。记录甄仁岛居民最真实的悲欢、生计、潮汐与市井波澜。
+    </p>
+  </div>
+
+  <div class="grid gap-6 sm:grid-cols-2">
+    {sortedPosts.map((post) => (
+      <a href={`/blog/${post.id}`} class="group block p-5 rounded-2xl bg-[#f7f4ed] dark:bg-[#18181b] border border-[#ebe5d8] dark:border-[#27272a] hover:border-amber-700/50 dark:hover:border-amber-500/50 transition">
+        <div class="flex items-center gap-3 mb-3">
+          <div class="w-8 h-8 rounded-full bg-amber-800 text-white flex items-center justify-center font-serif text-sm font-bold">
+            {post.data.guest_author?.slice(0, 1) || '岛'}
+          </div>
+          <div>
+            <div class="text-sm font-serif font-bold text-[#221f1b] dark:text-[#f4f2ee] group-hover:text-amber-800 dark:group-hover:text-amber-400 transition">
+              {post.data.guest_author}
+            </div>
+            <div class="text-xs text-[#8c867a] dark:text-[#7d7a74]">
+              {post.data.resident_snapshot?.occupation || '岛民'}
+            </div>
+          </div>
+        </div>
+
+        <h2 class="text-base font-serif font-bold text-[#1f1d19] dark:text-white line-clamp-2 leading-snug">
+          {post.data.title}
+        </h2>
+
+        {post.data.description && (
+          <p class="mt-2 text-xs text-[#635e54] dark:text-[#99958d] font-serif line-clamp-2 leading-relaxed">
+            {post.data.description}
+          </p>
+        )}
+
+        <div class="mt-4 pt-3 border-t border-[#ece6d8] dark:border-[#242428] flex items-center justify-between text-xs font-mono text-[#9c968a]">
+          <span>{post.data.pubDate.toLocaleDateString('zh-CN')}</span>
+          <span class="text-amber-800 dark:text-amber-400 font-serif">阅读全文 →</span>
+        </div>
+      </a>
+    ))}
+  </div>
+
+  {sortedPosts.length === 0 && (
+    <div class="text-center py-16 text-sm text-[#8c867a] font-serif">
+      尚未刊登特约共创文章，新的一期正在酝酿中……
+    </div>
+  )}
+</Layout>
