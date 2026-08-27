@@ -1,6 +1,7 @@
 ---
 import { getCollection, render } from 'astro:content';
 import Layout from '../../layouts/Layout.astro';
+import { parseAuthors, formatAuthorNames, getAuthorTitle, getAvatarBgClass } from '../../utils/authors';
 
 export async function getStaticPaths() {
   const posts = await getCollection('blog');
@@ -12,6 +13,7 @@ export async function getStaticPaths() {
 
 const { post } = Astro.props;
 const { Content } = await render(post);
+const authors = parseAuthors(post.data.guest_authors || post.data.guest_author);
 
 function getCategoryLabel(category: string) {
   switch (category) {
@@ -44,19 +46,28 @@ function getCategoryLabel(category: string) {
       </h1>
 
       <!-- 岛民共创特约卡片 -->
-      {post.data.guest_author && post.data.resident_snapshot && (
+      {authors.length > 0 && (
         <div class="mt-6 p-4 rounded-xl bg-[#f7f4ed] dark:bg-[#1c1c20] border border-[#e8e2d5] dark:border-[#2e2e36] flex items-center justify-between">
-          <div class="flex items-center gap-3">
-            <div class="w-10 h-10 rounded-full bg-amber-800 text-white flex items-center justify-center font-serif font-bold text-base">
-              {post.data.guest_author.slice(0, 1)}
+          <div class="flex items-center gap-3.5">
+            <div class="flex -space-x-2.5 items-center">
+              {authors.map((author, idx) => (
+                <div
+                  class={`w-10 h-10 rounded-full text-white flex items-center justify-center font-serif font-bold text-base ring-2 ring-[#f7f4ed] dark:ring-[#1c1c20] shadow-sm ${getAvatarBgClass(idx)}`}
+                  title={author}
+                >
+                  {author.slice(0, 1)}
+                </div>
+              ))}
             </div>
             <div>
               <div class="text-sm font-serif font-bold text-[#2a2723] dark:text-[#f0ede6]">
-                本期特约主笔：{post.data.guest_author}
+                {getAuthorTitle(authors)}：{formatAuthorNames(authors)}
               </div>
-              <div class="text-xs text-[#7d776c] dark:text-[#9e998e] mt-0.5">
-                {post.data.resident_snapshot.occupation || '岛民'}
-              </div>
+              {post.data.resident_snapshot?.occupation && (
+                <div class="text-xs text-[#8c867a] dark:text-[#7d7a74] mt-0.5">
+                  {post.data.resident_snapshot.occupation}
+                </div>
+              )}
             </div>
           </div>
           <div class="text-xs font-serif text-amber-900 dark:text-amber-300 px-3 py-1 bg-amber-100/60 dark:bg-amber-950/40 rounded-full">

@@ -11,7 +11,8 @@ const blog = defineCollection({
       'island_chronicle',   // 岛屿纪事 (POV)
       'mayor_essay',        // 兼容别名
     ]).default('mayor_essay'),
-    guest_author: z.string().optional(),
+    guest_author: z.union([z.string(), z.array(z.string())]).optional(),
+    guest_authors: z.array(z.string()).optional(),
     curator: z.string().default('公孙雅'),
     tags: z.array(z.string()).default([]),
     resident_snapshot: z.object({

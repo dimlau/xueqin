@@ -1,6 +1,7 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import { getCollection } from 'astro:content';
+import { parseAuthors, formatAuthorNames } from '../utils/authors';
 
 const allPosts = await getCollection('blog');
 const sortedPosts = allPosts.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
@@ -19,70 +20,14 @@ function getCategoryLabel(category: string) {
 ---
 
 <Layout title="首页">
-  <!-- 站点导言与导览区 -->
-  <section class="mb-12 pb-8 border-b border-[#ece8e1] dark:border-[#26262a]">
-    <div class="p-6 sm:p-8 rounded-2xl bg-[#fbf9f5] dark:bg-[#18181b] border border-[#eee8dc] dark:border-[#27272a] relative overflow-hidden">
-      <div class="relative z-10">
-        <span class="inline-block text-xs font-serif px-2.5 py-1 rounded bg-amber-100/70 dark:bg-amber-950/50 text-amber-900 dark:text-amber-300 font-medium mb-4">
-          甄仁岛市政厅文存
-        </span>
-        <h1 class="text-xl sm:text-2xl font-serif font-bold text-[#1a1a1a] dark:text-white leading-relaxed mb-3">
-          智识新陈代谢，照见虚实之间的微光
-        </h1>
-        <p class="text-sm font-serif text-[#66615b] dark:text-[#a5a19a] leading-relaxed mb-6 max-w-2xl">
-          欢迎来到【学勤网】。这里记录着二十九位岛民的微观人生、真实起伏，以及市长公孙雅对微型乌托邦治理的沉思与哲学。
-        </p>
-
-        <div class="flex flex-wrap items-center gap-3 text-xs font-serif">
-          <a
-            href="/chronicle"
-            class="px-3.5 py-2 rounded-xl bg-[#f2ecdf] dark:bg-[#232328] hover:bg-amber-800 hover:text-white dark:hover:bg-amber-700 transition font-medium"
-          >
-            岛屿纪事 · 居民自述 →
-          </a>
-          <a
-            href="/essays"
-            class="px-3.5 py-2 rounded-xl bg-[#f2ecdf] dark:bg-[#232328] hover:bg-amber-800 hover:text-white dark:hover:bg-amber-700 transition font-medium"
-          >
-            市长随笔 · 治理札记 →
-          </a>
-          <a
-            href="/about"
-            class="px-3.5 py-2 rounded-xl border border-[#ded7ca] dark:border-[#383840] hover:border-amber-800 dark:hover:border-amber-400 hover:text-amber-800 dark:hover:text-amber-400 transition"
-          >
-            关于本站 · 发刊词
-          </a>
-        </div>
-      </div>
-    </div>
-  </section>
-
   <!-- 最新文章列表 -->
   <section>
-    <div class="flex items-center justify-between mb-8">
-      <div>
-        <h2 class="text-xl sm:text-2xl font-serif font-bold text-[#1a1a1a] dark:text-white">
-          最新文存
-        </h2>
-        <p class="text-xs font-serif text-[#8a8a8e] mt-1">
-          全站最新发布的 3 篇文章
-        </p>
-      </div>
-      <div class="flex items-center gap-3 text-xs font-serif">
-        <a href="/chronicle" class="text-[#78736a] dark:text-[#9e9a91] hover:text-amber-800 dark:hover:text-amber-400 transition">
-          纪事
-        </a>
-        <span class="text-[#d0cbbf] dark:text-[#3e3e46]">/</span>
-        <a href="/essays" class="text-[#78736a] dark:text-[#9e9a91] hover:text-amber-800 dark:hover:text-amber-400 transition">
-          随笔
-        </a>
-      </div>
-    </div>
-
     {latestPosts.length > 0 ? (
       <div class="space-y-6">
         {latestPosts.map((post) => {
           const isChronicle = post.data.category === 'island_chronicle';
+          const authors = parseAuthors(post.data.guest_authors || post.data.guest_author);
+          const authorText = formatAuthorNames(authors);
           return (
             <article class="p-6 rounded-2xl bg-[#f7f4ed] dark:bg-[#18181b] border border-[#ebe5d8] dark:border-[#27272a] hover:border-amber-700/50 dark:hover:border-amber-500/50 transition flex flex-col justify-between">
               <div>
@@ -93,11 +38,11 @@ function getCategoryLabel(category: string) {
                   <time datetime={post.data.pubDate.toISOString()}>
                     {post.data.pubDate.toLocaleDateString('zh-CN', { year: 'numeric', month: '2-digit', day: '2-digit' })}
                   </time>
-                  {isChronicle && post.data.guest_author && (
+                  {isChronicle && authors.length > 0 && (
                     <>
                       <span>·</span>
                       <span class="font-serif text-[#6c675e] dark:text-[#9d9990]">
-                        特约作者：{post.data.guest_author}
+                        {authors.length > 1 ? '特约共创' : '特约作者'}：{authorText}
                         {post.data.resident_snapshot?.occupation && ` (${post.data.resident_snapshot.occupation})`}
                       </span>
                     </>

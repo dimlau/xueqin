@@ -1,6 +1,7 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import { getCollection } from 'astro:content';
+import { parseAuthors, formatAuthorNames, getAvatarBgClass } from '../utils/authors';
 
 const posts = await getCollection('blog', ({ data }) => data.category === 'island_chronicle');
 const sortedPosts = posts.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
@@ -9,7 +10,7 @@ const sortedPosts = posts.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDa
 <Layout title="岛屿纪事">
   <div class="mb-10">
     <h1 class="text-2xl sm:text-3xl font-serif font-bold text-[#1a1a1a] dark:text-white">
-      岛屿纪事 · 居民自述
+      岛屿纪事 · 岛民如是说
     </h1>
     <p class="text-sm font-serif text-[#78736a] dark:text-[#9e9a91] mt-2 leading-relaxed">
       特约甄仁岛居民撰写的微观浮世绘。记录岛民最真实的生计、悲欢、潮汐与市井波澜。
@@ -17,21 +18,37 @@ const sortedPosts = posts.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDa
   </div>
 
   <div class="grid gap-6 sm:grid-cols-2">
-    {sortedPosts.map((post) => (
-      <a href={`/blog/${post.id}`} class="group block p-5 rounded-2xl bg-[#f7f4ed] dark:bg-[#18181b] border border-[#ebe5d8] dark:border-[#27272a] hover:border-amber-700/50 dark:hover:border-amber-500/50 transition">
-        <div class="flex items-center gap-3 mb-3">
-          <div class="w-8 h-8 rounded-full bg-amber-800 text-white flex items-center justify-center font-serif text-sm font-bold">
-            {post.data.guest_author?.slice(0, 1) || '岛'}
-          </div>
-          <div>
-            <div class="text-sm font-serif font-bold text-[#221f1b] dark:text-[#f4f2ee] group-hover:text-amber-800 dark:group-hover:text-amber-400 transition">
-              {post.data.guest_author || '甄仁岛民'}
+    {sortedPosts.map((post) => {
+      const authors = parseAuthors(post.data.guest_authors || post.data.guest_author);
+      const authorText = formatAuthorNames(authors) || '甄仁岛民';
+      return (
+        <a href={`/blog/${post.id}`} class="group block p-5 rounded-2xl bg-[#f7f4ed] dark:bg-[#18181b] border border-[#ebe5d8] dark:border-[#27272a] hover:border-amber-700/50 dark:hover:border-amber-500/50 transition">
+          <div class="flex items-center gap-3 mb-3">
+            <div class="flex -space-x-2 items-center">
+              {authors.length > 0 ? (
+                authors.map((author, idx) => (
+                  <div
+                    class={`w-8 h-8 rounded-full text-white flex items-center justify-center font-serif text-xs font-bold ring-2 ring-[#f7f4ed] dark:ring-[#18181b] ${getAvatarBgClass(idx)}`}
+                    title={author}
+                  >
+                    {author.slice(0, 1)}
+                  </div>
+                ))
+              ) : (
+                <div class="w-8 h-8 rounded-full bg-amber-800 text-white flex items-center justify-center font-serif text-sm font-bold">
+                  岛
+                </div>
+              )}
             </div>
-            <div class="text-xs text-[#8c867a] dark:text-[#7d7a74]">
-              {post.data.resident_snapshot?.occupation || '岛民'}
+            <div>
+              <div class="text-sm font-serif font-bold text-[#221f1b] dark:text-[#f4f2ee] group-hover:text-amber-800 dark:group-hover:text-amber-400 transition">
+                {authorText}
+              </div>
+              <div class="text-xs text-[#8c867a] dark:text-[#7d7a74]">
+                {post.data.resident_snapshot?.occupation || (authors.length > 1 ? '特约共创' : '特约主笔')}
+              </div>
             </div>
           </div>
-        </div>
 
         <h2 class="text-base font-serif font-bold text-[#1f1d19] dark:text-white line-clamp-2 leading-snug">
           {post.data.title}
@@ -48,7 +65,8 @@ const sortedPosts = posts.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDa
           <span class="text-amber-800 dark:text-amber-400 font-serif">阅读全文 →</span>
         </div>
       </a>
-    ))}
+    );
+  })}
   </div>
 
   {sortedPosts.length === 0 && (
