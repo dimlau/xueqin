@@ -22,7 +22,7 @@ export function formatAuthorNames(authors: string[]): string {
 }
 
 export function getAuthorTitle(authors: string[]): string {
-  return authors.length > 1 ? '本期特约共创' : '本期特约主笔';
+  return authors.length > 1 ? '特约共创岛民' : '本期特约岛民';
 }
 
 const AVATAR_BG_CLASSES = [
