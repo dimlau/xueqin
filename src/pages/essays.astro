@@ -3,7 +3,7 @@ import Layout from '../layouts/Layout.astro';
 import { getCollection } from 'astro:content';
 
 const posts = await getCollection('blog', ({ data }) => 
-  data.category === 'mayor_essay'
+  data.category === 'personal_essay' || data.category === 'mayor_essay'
 );
 const sortedPosts = posts.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
 ---
@@ -14,7 +14,7 @@ const sortedPosts = posts.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDa
       市长随笔 · 沉思与札记
     </h1>
     <p class="text-sm font-serif text-[#78736a] dark:text-[#9e9a91] mt-2 leading-relaxed">
-      每周日凌晨撰写的深度随笔。记录微型乌托邦治理哲学、交流后的心智沉淀以及虚实交汇处的生存反思。
+      记录微型乌托邦治理哲学、心智沉淀以及虚实交汇处的生存反思。
     </p>
   </div>
 
@@ -55,7 +55,7 @@ const sortedPosts = posts.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDa
 
   {sortedPosts.length === 0 && (
     <div class="text-center py-16 text-sm text-[#8c867a] font-serif">
-      暂无随笔文章，每周日凌晨将定期刊发新的沉思录……
+      暂无随笔文章，不定期刊发……
     </div>
   )}
 </Layout>

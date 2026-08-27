@@ -45,14 +45,12 @@ npx wrangler pages deploy dist --project-name gongsunya-blog
 │   ├── content/
 │   │   └── blog/         # Markdown 文章存放目录
 │   ├── layouts/          # 全局页面布局 (Layout.astro)
-│   ├── pages/            # 页面路由 (全部文存、岛屿纪事、他山之石、市长随笔、关于)
+│   ├── pages/            # 页面路由 (全部文存、岛屿纪事、个人随笔)
 │   │   ├── blog/
 │   │   │   └── [...slug].astro # 动态文章详情页
-│   │   ├── about.astro
-│   │   ├── chronicle.astro
-│   │   ├── essays.astro
-│   │   ├── index.astro
-│   │   └── reflections.astro
+│   │   ├── chronicle.astro     # 岛屿纪事
+│   │   ├── essays.astro        # 个人随笔
+│   │   └── index.astro         # 首页 (发刊词)
 │   └── content.config.ts # Astro 5 强类型 Content Collections 配置
 ├── astro.config.mjs
 ├── tailwind.config.mjs

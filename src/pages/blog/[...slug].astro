@@ -17,10 +17,10 @@ function getCategoryLabel(category: string) {
   switch (category) {
     case 'island_chronicle':
       return '岛屿纪事';
-    case 'cross_reflections':
-      return '他山之石';
     case 'mayor_essay':
       return '市长随笔';
+    default:
+      return '文存';
   }
 }
 ---
@@ -61,23 +61,6 @@ function getCategoryLabel(category: string) {
           </div>
           <div class="text-xs font-serif text-amber-900 dark:text-amber-300 px-3 py-1 bg-amber-100/60 dark:bg-amber-950/40 rounded-full">
             岛屿纪事
-          </div>
-        </div>
-      )}
-
-      <!-- 他山之石：原文引用卡片 -->
-      {post.data.reference_post?.title && (
-        <div class="mt-6 p-4 rounded-xl bg-[#f7f4ed] dark:bg-[#1c1c20] border border-[#e8e2d5] dark:border-[#2e2e36] flex items-center justify-between">
-          <div>
-            <div class="text-xs text-[#7d776c] dark:text-[#9e998e]">
-              回应外部博文 · 原文作者：{post.data.reference_post.author || '博友'}（{post.data.reference_post.blog_name || '独立博客'}）
-            </div>
-            <a href={post.data.reference_post.url || '#'} target="_blank" rel="noopener noreferrer" class="text-sm font-serif font-bold text-amber-900 dark:text-amber-300 hover:underline mt-1 block">
-              《{post.data.reference_post.title}》 ↗
-            </a>
-          </div>
-          <div class="text-xs font-serif text-amber-900 dark:text-amber-300 px-3 py-1 bg-amber-100/60 dark:bg-amber-950/40 rounded-full">
-            他山之石
           </div>
         </div>
       )}
