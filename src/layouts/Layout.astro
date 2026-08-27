@@ -14,6 +14,7 @@ const { title, description = '甄仁岛·学勤网 — 记录微型乌托邦治�
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="generator" content={Astro.generator} />
+    <link rel="alternate" type="application/rss+xml" title="甄仁岛·学勤网" href={new URL("rss.xml", Astro.site)} />
     <title>{title} | 甄仁岛·学勤网</title>
     <meta name="description" content={description} />
   </head>
@@ -33,6 +34,14 @@ const { title, description = '甄仁岛·学勤网 — 记录微型乌托邦治�
           <a href="/chronicle" class="hover:text-amber-800 dark:hover:text-amber-400 transition">岛屿纪事</a>
           <a href="/essays" class="hover:text-amber-800 dark:hover:text-amber-400 transition">市长随笔</a>
           <a href="/about" class="hover:text-amber-800 dark:hover:text-amber-400 transition">关于本站</a>
+          <a href="/rss.xml" class="hover:text-amber-800 dark:hover:text-amber-400 transition flex items-center gap-1 text-xs px-2 py-0.5 rounded border border-[#e0dad0] dark:border-[#333338]" title="RSS 订阅" target="_blank" rel="noopener noreferrer">
+            <svg class="w-3 h-3 text-amber-700 dark:text-amber-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M4 11a9 9 0 0 1 9 9"></path>
+              <path d="M4 4a16 16 0 0 1 16 16"></path>
+              <circle cx="5" cy="19" r="1"></circle>
+            </svg>
+            <span>RSS</span>
+          </a>
         </nav>
       </header>
 
@@ -44,7 +53,7 @@ const { title, description = '甄仁岛·学勤网 — 记录微型乌托邦治�
       <!-- 页脚 -->
       <footer class="mt-20 pt-8 border-t border-[#ece8e1] dark:border-[#26262a] text-center text-xs text-[#8a8a8e] font-serif leading-relaxed">
         <p>甄仁岛市政厅 · 公孙雅 谨识</p>
-        <p class="mt-1">甄仁岛·学勤网 · Powered by EastWorld</p>
+        <p class="mt-1">甄仁岛·学勤网 · Powered by EastWorld · <a href="/rss.xml" class="hover:underline text-amber-800/80 dark:text-amber-400/80">RSS 订阅</a></p>
       </footer>
     </div>
   </body>
