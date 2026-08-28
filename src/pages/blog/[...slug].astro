@@ -30,8 +30,12 @@ function getCategoryLabel(category: string) {
 <Layout title={post.data.title} description={post.data.description}>
   <article class="max-w-none">
     <!-- 文章头部 -->
-    <header class="pb-8 mb-10 border-b border-[#ece8e1] dark:border-[#26262a]">
+    <header class="pb-6 mb-8 border-b border-[#ece8e1] dark:border-[#26262a]">
       <div class="flex flex-wrap items-center gap-3 text-xs font-mono text-[#8a8a8e] mb-4">
+        <span class="px-2.5 py-0.5 rounded font-serif text-[11px] bg-[#ece5d8] dark:bg-[#232328] text-amber-900 dark:text-amber-300">
+          {getCategoryLabel(post.data.category)}
+        </span>
+        <span>·</span>
         <time datetime={post.data.pubDate.toISOString()}>
           {post.data.pubDate.toLocaleDateString('zh-CN', { year: 'numeric', month: '2-digit', day: '2-digit' })}
         </time>
@@ -41,9 +45,78 @@ function getCategoryLabel(category: string) {
         {post.data.title}
       </h1>
 
-      <!-- 岛民共创特约卡片 -->
-      {authors.length > 0 && (
-        <div class="mt-6 p-4 rounded-xl bg-[#f7f4ed] dark:bg-[#1c1c20] border border-[#e8e2d5] dark:border-[#2e2e36] flex items-center justify-between">
+      {post.data.description && (
+        <p class="mt-4 text-sm sm:text-base font-serif text-[#666055] dark:text-[#a5a198] leading-relaxed">
+          {post.data.description}
+        </p>
+      )}
+    </header>
+
+    <!-- 岛民见闻录特约原声卡片 (POV 卡片集成) -->
+    {post.data.guest_povs && post.data.guest_povs.length > 0 ? (
+      <div class="my-8 space-y-6">
+        {post.data.guest_povs.map((pov, idx) => (
+          <section class="rounded-2xl bg-[#f8f5ee] dark:bg-[#18181b] border border-[#e6dfd1] dark:border-[#29292e] p-6 sm:p-8 shadow-sm relative overflow-hidden">
+            <!-- 装饰性背景水印 -->
+            <div class="absolute -right-2 -bottom-4 text-7xl font-serif font-black text-amber-950/[0.03] dark:text-white/[0.02] select-none pointer-events-none">
+              POV
+            </div>
+
+            <!-- 卡片头部：岛民身份 -->
+            <div class="flex items-center justify-between pb-4 mb-5 border-b border-[#ece5d7] dark:border-[#27272c]">
+              <div class="flex items-center gap-3.5">
+                <div
+                  class={`w-11 h-11 rounded-full text-white flex items-center justify-center font-serif font-bold text-base ring-2 ring-[#f8f5ee] dark:ring-[#18181b] shadow-sm ${getAvatarBgClass(idx)}`}
+                  title={pov.author}
+                >
+                  {pov.author.slice(0, 1)}
+                </div>
+                <div>
+                  <div class="flex items-center gap-2">
+                    <span class="text-base font-serif font-bold text-[#221f1b] dark:text-[#f4f2ee]">
+                      {pov.author}
+                    </span>
+                    {pov.occupation && pov.occupation !== '岛民' && pov.occupation.trim() !== '' && (
+                      <span class="text-[11px] font-mono px-2 py-0.5 rounded-full bg-[#eee7da] dark:bg-[#25252b] text-[#6d665a] dark:text-[#9e9a91]">
+                        {pov.occupation}
+                      </span>
+                    )}
+                  </div>
+                  <div class="text-xs font-serif text-[#8a8477] dark:text-[#7d7971] mt-0.5">
+                    甄仁岛一手生活见闻 · 原声纪事
+                  </div>
+                </div>
+              </div>
+
+              <div class="hidden sm:flex items-center gap-1.5 text-xs font-mono text-[#9e978a] dark:text-[#6a6660]">
+                <svg class="w-4 h-4 text-amber-800/60 dark:text-amber-500/60" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z"/>
+                </svg>
+                <span>原声摘录</span>
+              </div>
+            </div>
+
+            <!-- 卡片正文：POV 叙述 -->
+            <div class="font-serif text-[#332f2b] dark:text-[#d5d2cc] leading-relaxed sm:text-[15.5px] space-y-4 whitespace-pre-line">
+              {pov.content}
+            </div>
+          </section>
+        ))}
+
+        <!-- 衔接过渡线：市长案头思辨 -->
+        <div class="pt-6 pb-2 flex items-center gap-3">
+          <div class="h-px bg-[#e6e0d3] dark:bg-[#28282e] flex-grow"></div>
+          <span class="text-xs font-serif tracking-wider text-[#7d776a] dark:text-[#9e998e] px-3.5 py-1 rounded-full bg-[#f4efe4] dark:bg-[#1d1d22] border border-[#e3dccf] dark:border-[#2c2c34] flex items-center gap-1.5">
+            <span class="w-1.5 h-1.5 rounded-full bg-amber-800 dark:bg-amber-400"></span>
+            <span>市长案头札记 · 公孙雅 评注</span>
+          </span>
+          <div class="h-px bg-[#e6e0d3] dark:bg-[#28282e] flex-grow"></div>
+        </div>
+      </div>
+    ) : (
+      /* 兼容旧格式或随笔类作者信息卡片 */
+      authors.length > 0 && (
+        <div class="my-6 p-4 rounded-xl bg-[#f7f4ed] dark:bg-[#1c1c20] border border-[#e8e2d5] dark:border-[#2e2e36] flex items-center justify-between">
           <div class="flex items-center gap-3.5">
             <div class="flex -space-x-2.5 items-center">
               {authors.map((author, idx) => (
@@ -67,18 +140,18 @@ function getCategoryLabel(category: string) {
             </div>
           </div>
         </div>
-      )}
-    </header>
+      )
+    )}
 
-    <!-- 正文渲染 -->
+    <!-- 正文渲染 (市长评注与治理思辨) -->
     <div class="prose prose-neutral dark:prose-invert prose-stone font-serif max-w-none prose-headings:font-serif prose-headings:font-bold prose-blockquote:border-amber-800/40 prose-blockquote:bg-[#fbf9f5] dark:prose-blockquote:bg-[#18181b] prose-blockquote:py-2 prose-blockquote:px-5 prose-blockquote:rounded-r-lg prose-blockquote:not-italic prose-p:leading-relaxed prose-p:text-[#383531] dark:prose-p:text-[#cfccc6]">
       <Content />
     </div>
 
-    <!-- 文章尾部标签 -->
+    <!-- 文章尾部标签与策展落款 -->
     <footer class="mt-16 pt-8 border-t border-[#ece8e1] dark:border-[#26262a]">
       <div class="flex flex-wrap items-center justify-between gap-4">
-        <div class="flex items-center gap-2">
+        <div class="flex flex-wrap items-center gap-2">
           {post.data.tags.map((tag) => (
             <span class="text-xs font-serif px-2.5 py-1 rounded bg-[#f4efe6] dark:bg-[#1f1f24] text-[#6d6659] dark:text-[#99968e]">
               #{tag}

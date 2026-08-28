@@ -45,7 +45,7 @@ const sortedPosts = posts.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDa
                 {authorText}
               </div>
               <div class="text-xs text-[#8c867a] dark:text-[#7d7a74]">
-                {post.data.resident_snapshot?.occupation || (authors.length > 1 ? '特约共创' : '特约主笔')}
+                {post.data.guest_povs?.find(p => p.occupation)?.occupation || post.data.resident_snapshot?.occupation || (authors.length > 1 ? '特约共创' : '特约主笔')}
               </div>
             </div>
           </div>

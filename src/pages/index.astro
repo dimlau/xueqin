@@ -43,7 +43,11 @@ function getCategoryLabel(category: string) {
                       <span>·</span>
                       <span class="font-serif text-[#6c675e] dark:text-[#9d9990]">
                         {authors.length > 1 ? '特约共创' : '特约作者'}：{authorText}
-                        {post.data.resident_snapshot?.occupation && ` (${post.data.resident_snapshot.occupation})`}
+                        {post.data.guest_povs?.find(p => p.occupation)?.occupation
+                          ? ` (${post.data.guest_povs.find(p => p.occupation)?.occupation})`
+                          : post.data.resident_snapshot?.occupation
+                          ? ` (${post.data.resident_snapshot.occupation})`
+                          : ''}
                       </span>
                     </>
                   )}

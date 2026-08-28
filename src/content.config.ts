@@ -13,6 +13,11 @@ const blog = defineCollection({
     ]).default('mayor_essay'),
     guest_author: z.union([z.string(), z.array(z.string())]).optional(),
     guest_authors: z.array(z.string()).optional(),
+    guest_povs: z.array(z.object({
+      author: z.string(),
+      occupation: z.string().optional(),
+      content: z.string(),
+    })).optional(),
     curator: z.string().default('公孙雅'),
     tags: z.array(z.string()).default([]),
     resident_snapshot: z.object({
