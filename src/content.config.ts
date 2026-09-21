@@ -16,6 +16,7 @@ const blog = defineCollection({
     guest_povs: z.array(z.object({
       author: z.string(),
       occupation: z.string().optional(),
+      growth_note: z.string().optional(),
       content: z.string(),
     })).optional(),
     curator: z.string().default('公孙雅'),
