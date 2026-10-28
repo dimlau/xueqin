@@ -9,7 +9,7 @@ const sortedPosts = posts.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDa
 
 <Layout title="岛屿纪事">
   <div class="mb-10">
-    <h1 class="text-2xl sm:text-3xl font-serif font-bold text-[#1a1a1a] dark:text-white">
+    <h1 class="text-[1.55rem] sm:text-[1.8rem] font-serif font-bold text-[#1a1a1a] dark:text-white leading-[1.5] tracking-[0.01em]">
       岛屿纪事 · 岛民如是说
     </h1>
     <p class="text-sm font-serif text-[#78736a] dark:text-[#9e9a91] mt-2 leading-relaxed">
@@ -50,12 +50,12 @@ const sortedPosts = posts.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDa
             </div>
           </div>
 
-        <h2 class="text-base font-serif font-bold text-[#1f1d19] dark:text-white line-clamp-2 leading-snug">
+        <h2 class="text-[1.05rem] sm:text-[1.15rem] font-serif font-bold text-[#1f1d19] dark:text-white line-clamp-2 leading-[1.6] [text-wrap:balance]">
           {post.data.title}
         </h2>
 
         {post.data.description && (
-          <p class="mt-2 text-xs text-[#635e54] dark:text-[#99958d] font-serif line-clamp-2 leading-relaxed">
+          <p class="mt-2 text-[0.875rem] text-[#635e54] dark:text-[#99958d] font-serif line-clamp-2 leading-[1.75] tracking-[0.01em]">
             {post.data.description}
           </p>
         )}

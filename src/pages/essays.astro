@@ -9,7 +9,7 @@ const sortedPosts = posts.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDa
 
 <Layout title="市长随笔">
   <div class="mb-10">
-    <h1 class="text-2xl sm:text-3xl font-serif font-bold text-[#1a1a1a] dark:text-white">
+    <h1 class="text-[1.55rem] sm:text-[1.8rem] font-serif font-bold text-[#1a1a1a] dark:text-white leading-[1.5] tracking-[0.01em]">
       市长随笔 · 沉思与札记
     </h1>
     <p class="text-sm font-serif text-[#78736a] dark:text-[#9e9a91] mt-2 leading-relaxed">
@@ -20,20 +20,20 @@ const sortedPosts = posts.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDa
   <div class="space-y-8">
     {sortedPosts.map((post) => (
       <article class="p-6 rounded-2xl bg-[#f7f4ed] dark:bg-[#18181b] border border-[#ebe5d8] dark:border-[#27272a] hover:border-amber-700/50 dark:hover:border-amber-500/50 transition">
-        <div class="flex items-center gap-3 text-xs font-mono text-[#8a8a8e] mb-2">
+        <div class="flex items-center gap-3 text-[0.8rem] font-mono tracking-[0.01em] text-[#8a8a8e] mb-2">
           <time datetime={post.data.pubDate.toISOString()}>
             {post.data.pubDate.toLocaleDateString('zh-CN', { year: 'numeric', month: '2-digit', day: '2-digit' })}
           </time>
         </div>
 
-        <h2 class="text-lg sm:text-xl font-serif font-bold text-[#1a1a1a] dark:text-white leading-snug">
+        <h2 class="text-[1.15rem] sm:text-[1.3rem] font-serif font-bold text-[#1a1a1a] dark:text-white leading-[1.55] [text-wrap:balance]">
           <a href={`/blog/${post.id}`} class="hover:text-amber-800 dark:hover:text-amber-400 transition">
             {post.data.title}
           </a>
         </h2>
 
         {post.data.description && (
-          <p class="mt-3 text-sm text-[#5f5b54] dark:text-[#9e9b94] font-serif leading-relaxed line-clamp-2">
+          <p class="mt-3 text-[0.95rem] sm:text-[1rem] text-[#5f5b54] dark:text-[#9e9b94] font-serif leading-[1.85] tracking-[0.01em] line-clamp-2">
             {post.data.description}
           </p>
         )}

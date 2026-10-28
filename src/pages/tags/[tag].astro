@@ -45,7 +45,7 @@ function getCategoryLabel(category: string) {
       <span>{isPerson ? '人物脉络' : '主题标签'}</span>
     </div>
 
-    <h1 class="text-2xl sm:text-3xl font-serif font-bold text-[#1a1a1a] dark:text-white">
+    <h1 class="text-[1.55rem] sm:text-[1.8rem] font-serif font-bold text-[#1a1a1a] dark:text-white leading-[1.5] tracking-[0.01em]">
       <span class="text-amber-800/50 dark:text-amber-400/50">#</span>{tag}
     </h1>
     <p class="text-sm font-serif text-[#78736a] dark:text-[#9e9a91] mt-2 leading-relaxed">
@@ -58,7 +58,7 @@ function getCategoryLabel(category: string) {
   <div class="space-y-6">
     {posts.map((post) => (
       <article class="p-6 rounded-2xl bg-[#f7f4ed] dark:bg-[#18181b] border border-[#ebe5d8] dark:border-[#27272a] hover:border-amber-700/50 dark:hover:border-amber-500/50 transition">
-        <div class="flex flex-wrap items-center gap-3 text-xs font-mono text-[#8a8a8e] mb-2.5">
+        <div class="flex flex-wrap items-center gap-3 text-[0.8rem] font-mono tracking-[0.01em] text-[#8a8a8e] mb-2.5">
           <span class="px-2 py-0.5 rounded font-serif text-[11px] bg-[#ece5d8] dark:bg-[#232328] text-amber-900 dark:text-amber-300">
             {getCategoryLabel(post.data.category)}
           </span>
@@ -67,14 +67,14 @@ function getCategoryLabel(category: string) {
           </time>
         </div>
 
-        <h2 class="text-lg sm:text-xl font-serif font-bold text-[#1a1a1a] dark:text-white leading-snug">
+        <h2 class="text-[1.15rem] sm:text-[1.3rem] font-serif font-bold text-[#1a1a1a] dark:text-white leading-[1.55] [text-wrap:balance]">
           <a href={`/blog/${post.id}`} class="hover:text-amber-800 dark:hover:text-amber-400 transition">
             {post.data.title}
           </a>
         </h2>
 
         {post.data.description && (
-          <p class="mt-3 text-sm text-[#5f5b54] dark:text-[#9e9b94] font-serif leading-relaxed line-clamp-2">
+          <p class="mt-3 text-[0.95rem] sm:text-[1rem] text-[#5f5b54] dark:text-[#9e9b94] font-serif leading-[1.85] tracking-[0.01em] line-clamp-2">
             {post.data.description}
           </p>
         )}

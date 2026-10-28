@@ -34,7 +34,7 @@ function getCategoryLabel(category: string) {
   <article class="max-w-none">
     <!-- 文章头部 -->
     <header class="pb-6 mb-8 border-b border-[#ece8e1] dark:border-[#26262a]">
-      <div class="flex flex-wrap items-center gap-3 text-xs font-mono text-[#8a8a8e] mb-4">
+      <div class="flex flex-wrap items-center gap-3 text-[0.8rem] font-mono tracking-[0.01em] text-[#8a8a8e] mb-4">
         <span class="px-2.5 py-0.5 rounded font-serif text-[11px] bg-[#ece5d8] dark:bg-[#232328] text-amber-900 dark:text-amber-300">
           {getCategoryLabel(post.data.category)}
         </span>
@@ -44,12 +44,12 @@ function getCategoryLabel(category: string) {
         </time>
       </div>
 
-      <h1 class="text-2xl sm:text-4xl font-serif font-bold text-[#1a1a1a] dark:text-white leading-tight">
+      <h1 class="text-[1.55rem] sm:text-[1.8rem] font-serif font-bold text-[#1a1a1a] dark:text-white leading-[1.5] tracking-[0.01em] [text-wrap:balance]">
         {post.data.title}
       </h1>
 
       {post.data.description && (
-        <p class="mt-4 text-sm sm:text-base font-serif text-[#666055] dark:text-[#a5a198] leading-relaxed">
+        <p class="mt-4 text-[0.95rem] sm:text-[1.05rem] font-serif text-[#666055] dark:text-[#a5a198] leading-[1.9] tracking-[0.01em] [text-wrap:pretty]">
           {post.data.description}
         </p>
       )}
@@ -100,13 +100,13 @@ function getCategoryLabel(category: string) {
             </div>
 
             <!-- 卡片正文：POV 叙述 -->
-            <div class="font-serif text-[#332f2b] dark:text-[#d5d2cc] leading-relaxed sm:text-[15.5px] space-y-4 whitespace-pre-line">
+            <div class="font-serif text-[#332f2b] dark:text-[#d5d2cc] leading-[1.9] tracking-[0.01em] text-[1.02rem] sm:text-[1.08rem] space-y-4 whitespace-pre-line text-justify">
               {pov.content}
             </div>
 
             <!-- 市长旁白 · 岛民成长手记 -->
             {pov.growth_note && (
-              <div class="mt-5 pt-3.5 border-t border-[#ebd8c1]/70 dark:border-[#2f2b24] text-xs sm:text-[13px] font-serif leading-relaxed text-[#554736] dark:text-[#c4b39d] bg-[#fbf8f1] dark:bg-[#1c1914] px-4 py-3 rounded-xl border border-amber-900/10 dark:border-amber-400/10">
+              <div class="mt-5 pt-3.5 border-t border-[#ebd8c1]/70 dark:border-[#2f2b24] text-[0.85rem] sm:text-[0.875rem] font-serif leading-[1.8] text-[#554736] dark:text-[#c4b39d] bg-[#fbf8f1] dark:bg-[#1c1914] px-4 py-3 rounded-xl border border-amber-900/10 dark:border-amber-400/10">
                 <span class="inline-flex items-center gap-1 font-bold text-amber-800 dark:text-amber-400 select-none mr-1.5">
                   <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M12 20h9"/>
@@ -161,7 +161,7 @@ function getCategoryLabel(category: string) {
     )}
 
     <!-- 正文渲染 (市长评注与治理思辨) -->
-    <div class="prose prose-neutral dark:prose-invert prose-stone font-serif max-w-none prose-headings:font-serif prose-headings:font-bold prose-blockquote:border-amber-800/40 prose-blockquote:bg-[#fbf9f5] dark:prose-blockquote:bg-[#18181b] prose-blockquote:py-2 prose-blockquote:px-5 prose-blockquote:rounded-r-lg prose-blockquote:not-italic prose-p:leading-relaxed prose-p:text-[#383531] dark:prose-p:text-[#cfccc6]">
+    <div class="prose prose-neutral dark:prose-invert prose-stone font-serif max-w-none prose-headings:font-serif prose-headings:font-bold prose-blockquote:border-amber-800/40 prose-blockquote:bg-[#fbf9f5] dark:prose-blockquote:bg-[#18181b] prose-blockquote:py-2 prose-blockquote:px-5 prose-blockquote:rounded-r-lg prose-blockquote:not-italic prose-p:text-[#383531] dark:prose-p:text-[#cfccc6]">
       <Content />
     </div>
 
