@@ -2,6 +2,7 @@
 import { getCollection, render } from 'astro:content';
 import Layout from '../../layouts/Layout.astro';
 import { parseAuthors, formatAuthorNames, getAuthorTitle, getAvatarBgClass } from '../../utils/authors';
+import { getRelatedPosts, tagHref } from '../../utils/tags';
 
 export async function getStaticPaths() {
   const posts = await getCollection('blog');
@@ -12,8 +13,10 @@ export async function getStaticPaths() {
 }
 
 const { post } = Astro.props;
+const allPosts = await getCollection('blog');
 const { Content } = await render(post);
 const authors = parseAuthors(post.data.guest_authors || post.data.guest_author);
+const relatedPosts = getRelatedPosts(post, allPosts, 4);
 
 function getCategoryLabel(category: string) {
   switch (category) {
@@ -162,14 +165,60 @@ function getCategoryLabel(category: string) {
       <Content />
     </div>
 
+    <!-- 相关文章：靠共同标签把同题文章串起来 -->
+    {relatedPosts.length > 0 && (
+      <section class="mt-14">
+        <div class="flex items-center gap-3 mb-5">
+          <div class="h-px bg-[#e6e0d3] dark:bg-[#28282e] flex-grow"></div>
+          <h2 class="text-xs font-serif tracking-wider text-[#7d776a] dark:text-[#9e998e] px-3.5 py-1 rounded-full bg-[#f4efe4] dark:bg-[#1d1d22] border border-[#e3dccf] dark:border-[#2c2c34] flex items-center gap-1.5">
+            <span class="w-1.5 h-1.5 rounded-full bg-amber-800 dark:bg-amber-400"></span>
+            相关文章
+          </h2>
+          <div class="h-px bg-[#e6e0d3] dark:bg-[#28282e] flex-grow"></div>
+        </div>
+
+        <div class="grid gap-4 sm:grid-cols-2">
+          {relatedPosts.map(({ post: related, sharedTags }) => (
+            <a
+              href={`/blog/${related.id}`}
+              class="group flex flex-col justify-between p-5 rounded-2xl bg-[#f7f4ed] dark:bg-[#18181b] border border-[#ebe5d8] dark:border-[#27272a] hover:border-amber-700/50 dark:hover:border-amber-500/50 transition"
+            >
+              <div>
+                <div class="text-xs font-mono text-[#9c968a] dark:text-[#77736c] mb-2">
+                  {related.data.pubDate.toLocaleDateString('zh-CN', { year: 'numeric', month: '2-digit', day: '2-digit' })}
+                </div>
+                <h3 class="text-sm sm:text-base font-serif font-bold text-[#1f1d19] dark:text-white leading-snug group-hover:text-amber-800 dark:group-hover:text-amber-400 transition line-clamp-2">
+                  {related.data.title}
+                </h3>
+              </div>
+              <div class="mt-3 flex flex-wrap gap-x-2 gap-y-1 text-[11px] font-serif text-[#8c867a] dark:text-[#807c74]">
+                {sharedTags.slice(0, 3).map((shared) => (
+                  <span>#{shared}</span>
+                ))}
+              </div>
+            </a>
+          ))}
+        </div>
+
+        <div class="mt-4 text-right">
+          <a href="/tags" class="text-xs font-serif text-amber-800 dark:text-amber-400 hover:underline">
+            按标签浏览全部文章 →
+          </a>
+        </div>
+      </section>
+    )}
+
     <!-- 文章尾部标签与策展落款 -->
     <footer class="mt-16 pt-8 border-t border-[#ece8e1] dark:border-[#26262a]">
       <div class="flex flex-wrap items-center justify-between gap-4">
         <div class="flex flex-wrap items-center gap-2">
           {post.data.tags.map((tag) => (
-            <span class="text-xs font-serif px-2.5 py-1 rounded bg-[#f4efe6] dark:bg-[#1f1f24] text-[#6d6659] dark:text-[#99968e]">
+            <a
+              href={tagHref(tag)}
+              class="text-xs font-serif px-2.5 py-1 rounded bg-[#f4efe6] dark:bg-[#1f1f24] text-[#6d6659] dark:text-[#99968e] hover:text-amber-800 dark:hover:text-amber-400 hover:bg-[#efe7d8] dark:hover:bg-[#25252b] transition"
+            >
               #{tag}
-            </span>
+            </a>
           ))}
         </div>
         <a href="/" class="text-xs font-serif text-amber-800 dark:text-amber-400 hover:underline">

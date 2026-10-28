@@ -2,6 +2,7 @@
 import Layout from '../layouts/Layout.astro';
 import { getCollection } from 'astro:content';
 import { parseAuthors, formatAuthorNames } from '../utils/authors';
+import { tagHref } from '../utils/tags';
 
 const allPosts = await getCollection('blog');
 const sortedPosts = allPosts.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
@@ -67,7 +68,7 @@ function getCategoryLabel(category: string) {
               <div class="mt-5 pt-3 border-t border-[#ece6d8] dark:border-[#242428] flex items-center justify-between text-xs font-mono text-[#9c968a]">
                 <div class="flex items-center gap-2">
                   {post.data.tags.map((tag) => (
-                    <span class="font-serif">#{tag}</span>
+                    <a href={tagHref(tag)} class="font-serif hover:text-amber-800 dark:hover:text-amber-400 transition">#{tag}</a>
                   ))}
                 </div>
                 <a href={`/blog/${post.id}`} class="text-amber-800 dark:text-amber-400 font-serif hover:underline flex items-center gap-1">

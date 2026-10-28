@@ -1,0 +1,110 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { getCollection } from 'astro:content';
+import { buildTagIndex, getPersonNames, tagHref } from '../../utils/tags';
+
+const posts = await getCollection('blog');
+const tags = buildTagIndex(posts);
+const people = getPersonNames(posts);
+
+const personTags = tags.filter((item) => people.has(item.tag));
+const themeTags = tags.filter((item) => !people.has(item.tag));
+const frequentTags = themeTags.filter((item) => item.count > 1);
+const longTailTags = themeTags.filter((item) => item.count === 1);
+
+function sizeClass(count: number) {
+  if (count >= 10) return 'text-base sm:text-lg';
+  if (count >= 5) return 'text-sm sm:text-base';
+  if (count >= 2) return 'text-sm';
+  return 'text-xs';
+}
+---
+
+<Layout title="标签索引" description="按主题与岛民人物浏览甄仁岛文存。">
+  <div class="mb-10">
+    <h1 class="text-2xl sm:text-3xl font-serif font-bold text-[#1a1a1a] dark:text-white">
+      标签索引 · 按图索骥
+    </h1>
+    <p class="text-sm font-serif text-[#78736a] dark:text-[#9e9a91] mt-2 leading-relaxed">
+      同一标签下的文章共享一段脉络。主题标签指向反复出现的治理命题与生活质地；人物标签则串起某位岛民散落在各期纪事里的故事线。
+    </p>
+    <p class="mt-3 text-xs font-mono text-[#9c968a] dark:text-[#77736c]">
+      {posts.length} 篇文章 · {tags.length} 个标签
+    </p>
+  </div>
+
+  {personTags.length > 0 && (
+    <section class="mb-12">
+      <h2 class="flex items-center gap-2 text-sm font-serif font-bold text-[#5f584c] dark:text-[#a8a399] mb-4">
+        <span class="w-1.5 h-1.5 rounded-full bg-amber-800 dark:bg-amber-400"></span>
+        人物脉络
+        <span class="text-xs font-mono font-normal text-[#a09a8e] dark:text-[#6f6b64]">({personTags.length})</span>
+      </h2>
+      <div class="flex flex-wrap gap-2">
+        {personTags.map((item) => (
+          <a
+            href={tagHref(item.tag)}
+            class="group inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#f4efe4] dark:bg-[#1d1d22] border border-[#e3dccf] dark:border-[#2c2c34] hover:border-amber-700/50 dark:hover:border-amber-500/50 transition"
+          >
+            <span class="w-5 h-5 rounded-full bg-amber-800/90 text-white flex items-center justify-center text-[10px] font-serif font-bold">
+              {item.tag.slice(0, 1)}
+            </span>
+            <span class="text-xs sm:text-sm font-serif text-[#4a4439] dark:text-[#c9c4b9] group-hover:text-amber-800 dark:group-hover:text-amber-400 transition">
+              {item.tag}
+            </span>
+            <span class="text-[10px] font-mono text-[#a09a8e] dark:text-[#6f6b64]">{item.count}</span>
+          </a>
+        ))}
+      </div>
+    </section>
+  )}
+
+  <section class="mb-12">
+    <h2 class="flex items-center gap-2 text-sm font-serif font-bold text-[#5f584c] dark:text-[#a8a399] mb-4">
+      <span class="w-1.5 h-1.5 rounded-full bg-amber-800 dark:bg-amber-400"></span>
+      主题标签
+      <span class="text-xs font-mono font-normal text-[#a09a8e] dark:text-[#6f6b64]">({themeTags.length})</span>
+    </h2>
+
+    {frequentTags.length > 0 ? (
+      <div class="flex flex-wrap items-baseline gap-x-4 gap-y-3">
+        {frequentTags.map((item) => (
+          <a
+            href={tagHref(item.tag)}
+            class={`group inline-flex items-baseline gap-1 font-serif text-[#5c564b] dark:text-[#b3aea3] hover:text-amber-800 dark:hover:text-amber-400 transition ${sizeClass(item.count)}`}
+          >
+            <span>#{item.tag}</span>
+            <span class="text-[10px] font-mono text-[#a09a8e] dark:text-[#6f6b64]">{item.count}</span>
+          </a>
+        ))}
+      </div>
+    ) : (
+      <p class="text-sm font-serif text-[#8c867a] dark:text-[#807c74]">暂无重复出现的主题标签。</p>
+    )}
+
+    {longTailTags.length > 0 && (
+      <details class="mt-8 group">
+        <summary class="cursor-pointer list-none inline-flex items-center gap-1.5 text-xs font-serif text-[#8c867a] dark:text-[#807c74] hover:text-amber-800 dark:hover:text-amber-400 transition select-none">
+          <svg class="w-3 h-3 transition-transform group-open:rotate-90" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M9 18l6-6-6-6"></path>
+          </svg>
+          仅出现一次的长尾标签（{longTailTags.length}）
+        </summary>
+        <div class="mt-4 flex flex-wrap gap-x-3 gap-y-2">
+          {longTailTags.map((item) => (
+            <a
+              href={tagHref(item.tag)}
+              class="text-xs font-serif px-2.5 py-1 rounded bg-[#f4efe6] dark:bg-[#1f1f24] text-[#817a6d] dark:text-[#8f8c84] hover:text-amber-800 dark:hover:text-amber-400 hover:bg-[#efe7d8] dark:hover:bg-[#25252b] transition"
+            >
+              #{item.tag}
+            </a>
+          ))}
+        </div>
+      </details>
+    )}
+  </section>
+
+  <div class="pt-6 border-t border-[#ece8e1] dark:border-[#26262a] text-xs font-serif text-[#8a8a8e]">
+    <a href="/" class="text-amber-800 dark:text-amber-400 hover:underline">← 返回文存目录</a>
+  </div>
+</Layout>
