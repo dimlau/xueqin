@@ -1,0 +1,103 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { getCollection } from 'astro:content';
+import { parseAuthors, formatAuthorNames } from '../utils/authors';
+import { tagHref } from '../utils/tags';
+
+const posts = await getCollection('blog', ({ data }) => data.category === 'weekly_podcast');
+const sortedPosts = posts.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+---
+
+<Layout
+  title="甄仁茶叙"
+  description="趁定格咖啡馆晚九点半打烊后借桌录制，每周三晚随周刊同步上线，公孙雅与轮值岛民泡茶对谈岛内议题与岛外人间烟火。"
+>
+  <header class="mb-10 pb-6 border-b border-[#ece8e1] dark:border-[#26262a]">
+    <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+      <div>
+        <h1 class="text-[1.55rem] sm:text-[1.8rem] font-serif font-bold text-[#1a1a1a] dark:text-white leading-[1.5] tracking-[0.01em]">
+          甄仁茶叙 · 咖啡馆打烊夜话
+        </h1>
+        <p class="text-sm font-serif text-[#78736a] dark:text-[#9e9a91] mt-2 leading-relaxed">
+          趁定格咖啡馆晚九点半打烊后借一桌余温与热茶，公孙雅邀来一位轮值岛民对谈，每周三晚随周刊邮件同步上线。
+        </p>
+      </div>
+      <a
+        href="/podcast.xml"
+        class="shrink-0 inline-flex items-center gap-1.5 text-xs font-serif px-3 py-1.5 rounded-lg bg-[#f4efe4] dark:bg-[#1f1f24] border border-[#e0dad0] dark:border-[#333338] text-amber-900 dark:text-amber-300 hover:border-amber-700/60 dark:hover:border-amber-400/60 transition"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        <svg aria-hidden="true" class="w-3.5 h-3.5 text-amber-800 dark:text-amber-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M4 11a9 9 0 0 1 9 9"></path>
+          <path d="M4 4a16 16 0 0 1 16 16"></path>
+          <circle cx="5" cy="19" r="1"></circle>
+        </svg>
+        <span>播客 RSS 订阅</span>
+      </a>
+    </div>
+  </header>
+
+  {sortedPosts.length > 0 ? (
+    <div class="space-y-6">
+      {sortedPosts.map((post) => {
+        const authors = parseAuthors(post.data.guest_authors || post.data.guest_author);
+        const guestText = post.data.resident_snapshot?.name || formatAuthorNames(authors) || '甄仁岛民';
+        const occupation = post.data.resident_snapshot?.occupation;
+        return (
+          <article class="p-6 rounded-2xl bg-[#f7f4ed] dark:bg-[#18181b] border border-[#ebe5d8] dark:border-[#27272a] hover:border-amber-700/50 dark:hover:border-amber-500/50 transition">
+            <div class="flex flex-wrap items-center gap-2.5 text-[0.8rem] font-mono tracking-[0.01em] text-[#8a8a8e] mb-3">
+              {typeof post.data.episode === 'number' && post.data.episode > 0 && (
+                <span class="px-2 py-0.5 rounded font-serif text-[11px] bg-[#ece5d8] dark:bg-[#232328] text-amber-900 dark:text-amber-300">
+                  第 {post.data.episode} 期
+                </span>
+              )}
+              <time datetime={post.data.pubDate.toISOString()}>
+                {post.data.pubDate.toLocaleDateString('zh-CN', { year: 'numeric', month: '2-digit', day: '2-digit' })}
+              </time>
+              <span>·</span>
+              <span class="font-serif text-[#6c675e] dark:text-[#9d9990]">
+                嘉宾：{guestText}{occupation ? ` (${occupation})` : ''}
+              </span>
+              {post.data.audio_duration && (
+                <>
+                  <span>·</span>
+                  <span class="font-mono text-[#78716c] dark:text-[#a8a29e]">时长 {post.data.audio_duration}</span>
+                </>
+              )}
+            </div>
+
+            <h2 class="text-[1.15rem] sm:text-[1.3rem] font-serif font-bold text-[#1a1a1a] dark:text-white leading-[1.55] [text-wrap:balance]">
+              <a href={`/blog/${post.id}`} class="hover:text-amber-800 dark:hover:text-amber-400 transition">
+                {post.data.title}
+              </a>
+            </h2>
+
+            {post.data.description && (
+              <p class="mt-3 text-[0.95rem] sm:text-[1rem] text-[#5f5b54] dark:text-[#9e9b94] font-serif leading-[1.85] tracking-[0.01em] line-clamp-2">
+                {post.data.description}
+              </p>
+            )}
+
+            <div class="mt-5 pt-3 border-t border-[#ece6d8] dark:border-[#242428] flex flex-wrap items-center justify-between gap-3 text-xs font-mono text-[#9c968a]">
+              <div class="flex flex-wrap items-center gap-2">
+                {post.data.tags.map((tag) => (
+                  <a href={tagHref(tag)} class="font-serif hover:text-amber-800 dark:hover:text-amber-400 transition">#{tag}</a>
+                ))}
+              </div>
+              <a href={`/blog/${post.id}`} class="text-amber-800 dark:text-amber-400 font-serif hover:underline">
+                {post.data.audio_url ? '收听音频与文字实录' : '阅读文字实录'}<span class="sr-only">：{post.data.title}</span> →
+              </a>
+            </div>
+          </article>
+        );
+      })}
+    </div>
+  ) : (
+    <div class="text-center py-16 px-6 rounded-2xl bg-[#f7f4ed] dark:bg-[#18181b] border border-[#ebe5d8] dark:border-[#27272a]">
+      <p class="text-sm font-serif text-[#7d776c] dark:text-[#9e998e]">
+        首期《甄仁茶叙》将于本周三晚定格咖啡馆打烊后上线，欢迎提前订阅播客 RSS……
+      </p>
+    </div>
+  )}
+</Layout>

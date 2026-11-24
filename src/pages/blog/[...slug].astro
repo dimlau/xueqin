@@ -21,13 +21,20 @@ const relatedPosts = getRelatedPosts(post, allPosts, 4);
 function getCategoryLabel(category: string) {
   switch (category) {
     case 'island_chronicle':
+    case 'resident_spotlight':
       return '岛屿纪事';
     case 'mayor_essay':
       return '市长随笔';
+    case 'weekly_podcast':
+      return '甄仁茶叙';
     default:
       return '文存';
   }
 }
+
+const isPodcast = post.data.category === 'weekly_podcast';
+const podcastGuestEmail = post.data.resident_snapshot?.email;
+const podcastGuestName = post.data.resident_snapshot?.name || formatAuthorNames(authors) || '本期嘉宾';
 ---
 
 <Layout title={post.data.title} description={post.data.description}>
@@ -38,10 +45,22 @@ function getCategoryLabel(category: string) {
         <span class="px-2.5 py-0.5 rounded font-serif text-[11px] bg-[#ece5d8] dark:bg-[#232328] text-amber-900 dark:text-amber-300">
           {getCategoryLabel(post.data.category)}
         </span>
+        {typeof post.data.episode === 'number' && post.data.episode > 0 && (
+          <>
+            <span>·</span>
+            <span class="font-mono text-[#6d665a] dark:text-[#9e9a91]">第 {post.data.episode} 期</span>
+          </>
+        )}
         <span>·</span>
         <time datetime={post.data.pubDate.toISOString()}>
           {post.data.pubDate.toLocaleDateString('zh-CN', { year: 'numeric', month: '2-digit', day: '2-digit' })}
         </time>
+        {post.data.audio_duration && (
+          <>
+            <span>·</span>
+            <span class="font-mono text-[#78716c] dark:text-[#a8a29e]">音频 {post.data.audio_duration}</span>
+          </>
+        )}
       </div>
 
       <h1 class="text-[1.55rem] sm:text-[1.8rem] font-serif font-bold text-[#1a1a1a] dark:text-white leading-[1.5] tracking-[0.01em] [text-wrap:balance]">
@@ -54,6 +73,29 @@ function getCategoryLabel(category: string) {
         </p>
       )}
     </header>
+
+    <!-- 播客播放器（甄仁茶叙音频版） -->
+    {post.data.audio_url && (
+      <section class="my-7 p-5 rounded-2xl bg-[#f7f4ed] dark:bg-[#18181b] border border-[#e6dfd1] dark:border-[#2a2a30] shadow-sm">
+        <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
+          <div class="text-sm font-serif font-bold text-[#221f1b] dark:text-[#f4f2ee]">
+            收听《甄仁茶叙》本期原声{post.data.audio_duration ? `（${post.data.audio_duration}）` : ''}
+          </div>
+          <a href="/podcast.xml" target="_blank" rel="noopener noreferrer" class="text-xs font-serif text-amber-800 dark:text-amber-400 hover:underline">
+            播客 RSS 订阅 →
+          </a>
+        </div>
+        <audio
+          controls
+          preload="metadata"
+          aria-details="article-content"
+          src={post.data.audio_url}
+          class="w-full"
+        >
+          你的浏览器暂不支持音频播放，请直接阅读下方对话实录，或访问 <a href={post.data.audio_url}>音频文件</a>。
+        </audio>
+      </section>
+    )}
 
     <!-- 岛民见闻录特约原声卡片 (POV 卡片集成) -->
     {post.data.guest_povs && post.data.guest_povs.length > 0 ? (
@@ -92,7 +134,7 @@ function getCategoryLabel(category: string) {
               </div>
 
               <div class="hidden sm:flex items-center gap-1.5 text-xs font-mono text-[#9e978a] dark:text-[#6a6660]">
-                <svg class="w-4 h-4 text-amber-800/60 dark:text-amber-500/60" viewBox="0 0 24 24" fill="currentColor">
+                <svg aria-hidden="true" class="w-4 h-4 text-amber-800/60 dark:text-amber-500/60" viewBox="0 0 24 24" fill="currentColor">
                   <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z"/>
                 </svg>
                 <span>原始材料</span>
@@ -108,7 +150,7 @@ function getCategoryLabel(category: string) {
             {pov.growth_note && (
               <div class="mt-5 pt-3.5 border-t border-[#ebd8c1]/70 dark:border-[#2f2b24] text-[0.85rem] sm:text-[0.875rem] font-serif leading-[1.8] text-[#554736] dark:text-[#c4b39d] bg-[#fbf8f1] dark:bg-[#1c1914] px-4 py-3 rounded-xl border border-amber-900/10 dark:border-amber-400/10">
                 <span class="inline-flex items-center gap-1 font-bold text-amber-800 dark:text-amber-400 select-none mr-1.5">
-                  <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <svg aria-hidden="true" class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M12 20h9"/>
                     <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
                   </svg>
@@ -147,7 +189,7 @@ function getCategoryLabel(category: string) {
             </div>
             <div>
               <div class="text-sm font-serif font-bold text-[#2a2723] dark:text-[#f0ede6]">
-                {getAuthorTitle(authors)}：{formatAuthorNames(authors)}
+                {isPodcast ? '本期茶叙嘉宾' : getAuthorTitle(authors)}：{formatAuthorNames(authors)}
               </div>
               {post.data.resident_snapshot?.occupation && (
                 <div class="text-xs text-[#8c867a] dark:text-[#7d7a74] mt-0.5">
@@ -160,10 +202,29 @@ function getCategoryLabel(category: string) {
       )
     )}
 
-    <!-- 正文渲染 (市长评注与治理思辨) -->
-    <div class="prose prose-neutral dark:prose-invert prose-stone font-serif max-w-none prose-headings:font-serif prose-headings:font-bold prose-blockquote:border-amber-800/40 prose-blockquote:bg-[#fbf9f5] dark:prose-blockquote:bg-[#18181b] prose-blockquote:py-2 prose-blockquote:px-5 prose-blockquote:rounded-r-lg prose-blockquote:not-italic prose-p:text-[#383531] dark:prose-p:text-[#cfccc6]">
+    <!-- 正文渲染 (市长评注与治理思辨 / 播客完整文字实录) -->
+    <div id="article-content" class="prose prose-neutral dark:prose-invert prose-stone font-serif max-w-none prose-headings:font-serif prose-headings:font-bold prose-blockquote:border-amber-800/40 prose-blockquote:bg-[#fbf9f5] dark:prose-blockquote:bg-[#18181b] prose-blockquote:py-2 prose-blockquote:px-5 prose-blockquote:rounded-r-lg prose-blockquote:not-italic prose-p:text-[#383531] dark:prose-p:text-[#cfccc6]">
       <Content />
     </div>
+
+    <!-- 嘉宾来信邀请卡（《甄仁茶叙》播客尾声邀约） -->
+    {podcastGuestEmail && (
+      <section class="mt-10 p-6 rounded-2xl bg-[#f7f4ed] dark:bg-[#18181b] border border-[#e3dccf] dark:border-[#2c2c34]">
+        <h2 class="text-base font-serif font-bold text-[#1a1a1a] dark:text-white mb-2">
+          ✉️ 给本期嘉宾写信
+        </h2>
+        <p class="text-sm font-serif text-[#4d483f] dark:text-[#b5b0a6] leading-relaxed">
+          如果你对今晚茶桌上聊起的事有话说，欢迎直接写邮件给本期嘉宾 <strong>{podcastGuestName}</strong>
+          {post.data.resident_snapshot?.occupation ? `（${post.data.resident_snapshot.occupation}）` : ''}：
+          <a href={`mailto:${podcastGuestEmail}`} class="font-mono text-amber-800 dark:text-amber-400 underline underline-offset-4 hover:opacity-80">
+            {podcastGuestEmail}
+          </a>。
+        </p>
+        <p class="mt-2 text-xs font-serif text-[#7d776c] dark:text-[#8d887f] leading-relaxed">
+          首次给甄仁岛来信的岛外朋友，可先发一封邮件至 <code class="font-mono">new@mail.digg.cafe</code>（邮件标题写 <code class="font-mono">【注册用户名 你的称呼】</code>）激活甄仁岛邮政通行证，嘉宾收到信后会亲笔回信。
+        </p>
+      </section>
+    )}
 
     <!-- 相关文章：靠共同标签把同题文章串起来 -->
     {relatedPosts.length > 0 && (

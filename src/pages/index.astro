@@ -11,9 +11,12 @@ const latestPosts = sortedPosts.slice(0, 3);
 function getCategoryLabel(category: string) {
   switch (category) {
     case 'island_chronicle':
+    case 'resident_spotlight':
       return '岛屿纪事';
     case 'mayor_essay':
       return '市长随笔';
+    case 'weekly_podcast':
+      return '甄仁茶叙';
     default:
       return '文存';
   }
@@ -26,7 +29,8 @@ function getCategoryLabel(category: string) {
     {latestPosts.length > 0 ? (
       <div class="space-y-6">
         {latestPosts.map((post) => {
-          const isChronicle = post.data.category === 'island_chronicle';
+          const isChronicle = post.data.category === 'island_chronicle' || post.data.category === 'resident_spotlight';
+          const isPodcast = post.data.category === 'weekly_podcast';
           const authors = parseAuthors(post.data.guest_authors || post.data.guest_author);
           const authorText = formatAuthorNames(authors);
           return (
@@ -36,18 +40,29 @@ function getCategoryLabel(category: string) {
                   <span class="px-2 py-0.5 rounded font-serif text-[11px] bg-[#ece5d8] dark:bg-[#232328] text-amber-900 dark:text-amber-300">
                     {getCategoryLabel(post.data.category)}
                   </span>
+                  {isPodcast && typeof post.data.episode === 'number' && post.data.episode > 0 && (
+                    <span class="px-2 py-0.5 rounded font-mono text-[11px] bg-[#efe9dc] dark:bg-[#222226] text-[#6c675e] dark:text-[#a8a29e]">
+                      第 {post.data.episode} 期
+                    </span>
+                  )}
                   <time datetime={post.data.pubDate.toISOString()}>
                     {post.data.pubDate.toLocaleDateString('zh-CN', { year: 'numeric', month: '2-digit', day: '2-digit' })}
                   </time>
-                  {isChronicle && authors.length > 0 && (
+                  {(isChronicle || isPodcast) && authors.length > 0 && (
                     <>
                       <span>·</span>
                       <span class="font-serif text-[#6c675e] dark:text-[#9d9990]">
-                        {authors.length > 1 ? '特约共创' : '特约作者'}：{authorText}
+                        {isPodcast ? '嘉宾' : (authors.length > 1 ? '特约共创' : '特约作者')}：{authorText}
                         {authors.length === 1 && (post.data.guest_povs?.[0]?.occupation || post.data.resident_snapshot?.occupation)
                           ? ` (${post.data.guest_povs?.[0]?.occupation || post.data.resident_snapshot?.occupation})`
                           : ''}
                       </span>
+                    </>
+                  )}
+                  {isPodcast && post.data.audio_duration && (
+                    <>
+                      <span>·</span>
+                      <span class="font-mono text-[#78716c] dark:text-[#a8a29e]">时长 {post.data.audio_duration}</span>
                     </>
                   )}
                 </div>
@@ -72,7 +87,7 @@ function getCategoryLabel(category: string) {
                   ))}
                 </div>
                 <a href={`/blog/${post.id}`} class="text-amber-800 dark:text-amber-400 font-serif hover:underline flex items-center gap-1">
-                  阅读全文 →
+                  {post.data.audio_url ? '收听与阅读' : '阅读全文'}<span class="sr-only">：{post.data.title}</span> →
                 </a>
               </div>
             </article>
@@ -95,12 +110,15 @@ function getCategoryLabel(category: string) {
     {latestPosts.length > 0 && (
       <div class="mt-10 pt-6 border-t border-[#ece8e1] dark:border-[#26262a] flex flex-col sm:flex-row items-center justify-between gap-4 text-xs font-serif text-[#8a8a8e]">
         <span>查看更多专题内容</span>
-        <div class="flex items-center gap-4">
+        <div class="flex flex-wrap items-center gap-4">
           <a href="/chronicle" class="text-amber-800 dark:text-amber-400 hover:underline">
-            全部岛屿纪事 ({sortedPosts.filter(p => p.data.category === 'island_chronicle').length}) →
+            全部岛屿纪事 ({sortedPosts.filter(p => p.data.category === 'island_chronicle' || p.data.category === 'resident_spotlight').length}) →
           </a>
-          <a href="/essays" class="text-amber-800 dark:hover:text-amber-400 hover:underline">
-            全部市长随笔 ({sortedPosts.filter(p => p.data.category !== 'island_chronicle').length}) →
+          <a href="/essays" class="text-amber-800 dark:text-amber-400 hover:underline">
+            全部市长随笔 ({sortedPosts.filter(p => p.data.category === 'mayor_essay').length}) →
+          </a>
+          <a href="/teachat" class="text-amber-800 dark:text-amber-400 hover:underline">
+            全部甄仁茶叙 ({sortedPosts.filter(p => p.data.category === 'weekly_podcast').length}) →
           </a>
         </div>
       </div>

@@ -25,9 +25,12 @@ const isPerson = getPersonNames(allPosts).has(tag);
 function getCategoryLabel(category: string) {
   switch (category) {
     case 'island_chronicle':
+    case 'resident_spotlight':
       return '岛屿纪事';
     case 'mayor_essay':
       return '市长随笔';
+    case 'weekly_podcast':
+      return '甄仁茶叙';
     default:
       return '文存';
   }
