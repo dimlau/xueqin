@@ -1,0 +1,71 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { getCollection } from 'astro:content';
+import { getAvatarBgClass } from '../../utils/authors';
+import { authorHref, getContributors, getPostContributors } from '../../utils/contributors';
+
+const posts = await getCollection('blog');
+const contributors = getContributors(posts);
+const contributorPosts = new Set(
+  posts.filter((post) => getPostContributors(post).length > 0).map((post) => post.id)
+);
+---
+
+<Layout title="岛民作者" description="甄仁岛特约岛民名录，按作者浏览他们参与撰写的纪事与茶叙。">
+  <div class="mb-10">
+    <h1 class="text-[1.55rem] sm:text-[1.8rem] font-serif font-bold text-[#1a1a1a] dark:text-white leading-[1.5] tracking-[0.01em]">
+      岛民作者 · 特约名录
+    </h1>
+    <p class="text-sm font-serif text-[#78736a] dark:text-[#9e9a91] mt-2 leading-relaxed">
+      岛屿纪事与甄仁茶叙每期由一两位岛民亲口讲述。这里按作者归拢他们登场过的篇目，方便顺着一个人的视角读下去。
+    </p>
+    <p class="mt-3 text-xs font-mono text-[#9c968a] dark:text-[#77736c]">
+      {contributors.length} 位特约岛民 · {contributorPosts.size} 篇参与
+    </p>
+  </div>
+
+  {contributors.length > 0 ? (
+    <div class="grid gap-4 sm:grid-cols-2">
+      {contributors.map((contributor, idx) => (
+        <a
+          href={authorHref(contributor.name)}
+          class="group flex items-center gap-4 p-5 rounded-2xl bg-[#f7f4ed] dark:bg-[#18181b] border border-[#ebe5d8] dark:border-[#27272a] hover:border-amber-700/50 dark:hover:border-amber-500/50 transition"
+        >
+          <div
+            class={`w-12 h-12 shrink-0 rounded-full text-white flex items-center justify-center font-serif font-bold text-lg ring-2 ring-[#f7f4ed] dark:ring-[#18181b] shadow-sm ${getAvatarBgClass(idx)}`}
+          >
+            {contributor.name.slice(0, 1)}
+          </div>
+
+          <div class="min-w-0 flex-grow">
+            <div class="flex items-center gap-2">
+              <span class="text-base font-serif font-bold text-[#221f1b] dark:text-[#f4f2ee] group-hover:text-amber-800 dark:group-hover:text-amber-400 transition">
+                {contributor.name}
+              </span>
+              {contributor.occupation && (
+                <span class="text-[11px] font-mono px-2 py-0.5 rounded-full bg-[#eee7da] dark:bg-[#25252b] text-[#6d665a] dark:text-[#9e9a91]">
+                  {contributor.occupation}
+                </span>
+              )}
+            </div>
+            <div class="mt-1 text-xs font-serif text-[#8a8477] dark:text-[#7d7971] truncate">
+              {contributor.posts.length} 篇参与 · 最近《{contributor.posts[0].data.title}》
+            </div>
+          </div>
+
+          <span class="shrink-0 text-amber-800/60 dark:text-amber-400/60 group-hover:text-amber-800 dark:group-hover:text-amber-400 transition" aria-hidden="true">
+            →
+          </span>
+        </a>
+      ))}
+    </div>
+  ) : (
+    <div class="text-center py-16 text-sm font-serif text-[#8c867a] dark:text-[#807c74]">
+      暂无特约岛民登场。
+    </div>
+  )}
+
+  <div class="mt-10 pt-6 border-t border-[#ece8e1] dark:border-[#26262a] text-xs font-serif text-[#8a8a8e]">
+    <a href="/" class="text-amber-800 dark:text-amber-400 hover:underline">← 返回文存目录</a>
+  </div>
+</Layout>

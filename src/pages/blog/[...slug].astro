@@ -2,7 +2,8 @@
 import { getCollection, render } from 'astro:content';
 import Layout from '../../layouts/Layout.astro';
 import { parseAuthors, formatAuthorNames, getAuthorTitle, getAvatarBgClass } from '../../utils/authors';
-import { getRelatedPosts, tagHref } from '../../utils/tags';
+import { authorHref, getContributorNames } from '../../utils/contributors';
+import { getRelatedPosts } from '../../utils/tags';
 
 export async function getStaticPaths() {
   const posts = await getCollection('blog');
@@ -17,6 +18,7 @@ const allPosts = await getCollection('blog');
 const { Content } = await render(post);
 const authors = parseAuthors(post.data.guest_authors || post.data.guest_author);
 const relatedPosts = getRelatedPosts(post, allPosts, 4);
+const contributorNames = getContributorNames(allPosts);
 
 function getCategoryLabel(category: string) {
   switch (category) {
@@ -110,17 +112,25 @@ const podcastGuestName = post.data.resident_snapshot?.name || formatAuthorNames(
             <!-- 卡片头部：岛民身份 -->
             <div class="flex items-center justify-between pb-4 mb-5 border-b border-[#ece5d7] dark:border-[#27272c]">
               <div class="flex items-center gap-3.5">
-                <div
-                  class={`w-11 h-11 rounded-full text-white flex items-center justify-center font-serif font-bold text-base ring-2 ring-[#f8f5ee] dark:ring-[#18181b] shadow-sm ${getAvatarBgClass(idx)}`}
-                  title={pov.author}
+                <a
+                  href={contributorNames.has(pov.author) ? authorHref(pov.author) : undefined}
+                  class="shrink-0"
+                  title={contributorNames.has(pov.author) ? `浏览 ${pov.author} 的纪事` : pov.author}
                 >
-                  {pov.author.slice(0, 1)}
-                </div>
+                  <div
+                    class={`w-11 h-11 rounded-full text-white flex items-center justify-center font-serif font-bold text-base ring-2 ring-[#f8f5ee] dark:ring-[#18181b] shadow-sm ${getAvatarBgClass(idx)}`}
+                  >
+                    {pov.author.slice(0, 1)}
+                  </div>
+                </a>
                 <div>
                   <div class="flex items-center gap-2">
-                    <span class="text-base font-serif font-bold text-[#221f1b] dark:text-[#f4f2ee]">
+                    <a
+                      href={contributorNames.has(pov.author) ? authorHref(pov.author) : undefined}
+                      class="text-base font-serif font-bold text-[#221f1b] dark:text-[#f4f2ee] hover:text-amber-800 dark:hover:text-amber-400 hover:underline transition"
+                    >
                       {pov.author}
-                    </span>
+                    </a>
                     {pov.occupation && pov.occupation !== '岛民' && pov.occupation.trim() !== '' && (
                       <span class="text-[11px] font-mono px-2 py-0.5 rounded-full bg-[#eee7da] dark:bg-[#25252b] text-[#6d665a] dark:text-[#9e9a91]">
                         {pov.occupation}
@@ -189,7 +199,19 @@ const podcastGuestName = post.data.resident_snapshot?.name || formatAuthorNames(
             </div>
             <div>
               <div class="text-sm font-serif font-bold text-[#2a2723] dark:text-[#f0ede6]">
-                {isPodcast ? '本期茶叙嘉宾' : getAuthorTitle(authors)}：{formatAuthorNames(authors)}
+                {isPodcast ? '本期茶叙嘉宾' : getAuthorTitle(authors)}：
+                {authors.map((author, idx) => (
+                  <>
+                    {idx > 0 && '、'}
+                    {contributorNames.has(author) ? (
+                      <a href={authorHref(author)} class="hover:text-amber-800 dark:hover:text-amber-400 hover:underline transition">
+                        {author}
+                      </a>
+                    ) : (
+                      author
+                    )}
+                  </>
+                ))}
               </div>
               {post.data.resident_snapshot?.occupation && (
                 <div class="text-xs text-[#8c867a] dark:text-[#7d7a74] mt-0.5">
@@ -260,12 +282,6 @@ const podcastGuestName = post.data.resident_snapshot?.name || formatAuthorNames(
             </a>
           ))}
         </div>
-
-        <div class="mt-4 text-right">
-          <a href="/tags" class="text-xs font-serif text-amber-800 dark:text-amber-400 hover:underline">
-            按标签浏览全部文章 →
-          </a>
-        </div>
       </section>
     )}
 
@@ -274,12 +290,9 @@ const podcastGuestName = post.data.resident_snapshot?.name || formatAuthorNames(
       <div class="flex flex-wrap items-center justify-between gap-4">
         <div class="flex flex-wrap items-center gap-2">
           {post.data.tags.map((tag) => (
-            <a
-              href={tagHref(tag)}
-              class="text-xs font-serif px-2.5 py-1 rounded bg-[#f4efe6] dark:bg-[#1f1f24] text-[#6d6659] dark:text-[#99968e] hover:text-amber-800 dark:hover:text-amber-400 hover:bg-[#efe7d8] dark:hover:bg-[#25252b] transition"
-            >
+            <span class="text-xs font-serif px-2.5 py-1 rounded bg-[#f4efe6] dark:bg-[#1f1f24] text-[#6d6659] dark:text-[#99968e]">
               #{tag}
-            </a>
+            </span>
           ))}
         </div>
         <a href="/" class="text-xs font-serif text-amber-800 dark:text-amber-400 hover:underline">

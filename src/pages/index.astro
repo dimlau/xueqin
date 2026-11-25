@@ -1,12 +1,13 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import { getCollection } from 'astro:content';
-import { parseAuthors, formatAuthorNames } from '../utils/authors';
-import { tagHref } from '../utils/tags';
+import { parseAuthors } from '../utils/authors';
+import { authorHref, getContributorNames } from '../utils/contributors';
 
 const allPosts = await getCollection('blog');
 const sortedPosts = allPosts.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
 const latestPosts = sortedPosts.slice(0, 3);
+const contributorNames = getContributorNames(allPosts);
 
 function getCategoryLabel(category: string) {
   switch (category) {
@@ -32,7 +33,6 @@ function getCategoryLabel(category: string) {
           const isChronicle = post.data.category === 'island_chronicle' || post.data.category === 'resident_spotlight';
           const isPodcast = post.data.category === 'weekly_podcast';
           const authors = parseAuthors(post.data.guest_authors || post.data.guest_author);
-          const authorText = formatAuthorNames(authors);
           return (
             <article class="p-6 rounded-2xl bg-[#f7f4ed] dark:bg-[#18181b] border border-[#ebe5d8] dark:border-[#27272a] hover:border-amber-700/50 dark:hover:border-amber-500/50 transition flex flex-col justify-between">
               <div>
@@ -52,7 +52,19 @@ function getCategoryLabel(category: string) {
                     <>
                       <span>·</span>
                       <span class="font-serif text-[#6c675e] dark:text-[#9d9990]">
-                        {isPodcast ? '嘉宾' : (authors.length > 1 ? '特约共创' : '特约作者')}：{authorText}
+                        {isPodcast ? '嘉宾' : (authors.length > 1 ? '特约共创' : '特约作者')}：
+                        {authors.map((author, idx) => (
+                          <>
+                            {idx > 0 && '、'}
+                            {contributorNames.has(author) ? (
+                              <a href={authorHref(author)} class="hover:text-amber-800 dark:hover:text-amber-400 hover:underline transition">
+                                {author}
+                              </a>
+                            ) : (
+                              author
+                            )}
+                          </>
+                        ))}
                         {authors.length === 1 && (post.data.guest_povs?.[0]?.occupation || post.data.resident_snapshot?.occupation)
                           ? ` (${post.data.guest_povs?.[0]?.occupation || post.data.resident_snapshot?.occupation})`
                           : ''}
@@ -83,7 +95,7 @@ function getCategoryLabel(category: string) {
               <div class="mt-5 pt-3 border-t border-[#ece6d8] dark:border-[#242428] flex items-center justify-between text-xs font-mono text-[#9c968a]">
                 <div class="flex items-center gap-2">
                   {post.data.tags.map((tag) => (
-                    <a href={tagHref(tag)} class="font-serif hover:text-amber-800 dark:hover:text-amber-400 transition">#{tag}</a>
+                    <span class="font-serif">#{tag}</span>
                   ))}
                 </div>
                 <a href={`/blog/${post.id}`} class="text-amber-800 dark:text-amber-400 font-serif hover:underline flex items-center gap-1">
