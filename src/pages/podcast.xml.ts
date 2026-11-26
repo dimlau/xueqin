@@ -40,9 +40,7 @@ export async function GET(context: APIContext) {
       );
       const guestLabel = post.data.resident_snapshot?.name || guestNames || '甄仁岛民';
       const authorLine = guestNames ? `公孙雅 × ${guestLabel}` : post.data.curator || '公孙雅';
-      const title = post.data.episode
-        ? `第 ${post.data.episode} 期｜${post.data.title}`
-        : post.data.title;
+      const title = post.data.title;
       const summary = post.data.description || post.data.title;
 
       const emailHtml = post.data.resident_snapshot?.email
