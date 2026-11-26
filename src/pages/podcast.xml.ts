@@ -27,6 +27,7 @@ export async function GET(context: APIContext) {
     .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
 
   const lastBuildDate = (episodes[0]?.data.pubDate ?? new Date()).toUTCString();
+  const copyrightYear = (episodes[0]?.data.pubDate ?? new Date()).getUTCFullYear();
 
   const itemsXml = episodes
     .map((post) => {
@@ -65,7 +66,7 @@ export async function GET(context: APIContext) {
       <pubDate>${escapeXml(post.data.pubDate.toUTCString())}</pubDate>
       <description>${escapeXml(summary)}</description>
       <enclosure url="${escapeXml(audioUrl)}" length="${audioSize}" type="audio/mpeg" />
-      <itunes:title>${escapeXml(title)}</itunes:title>
+      <itunes:title>${escapeXml(post.data.title)}</itunes:title>
       <itunes:author>${escapeXml(authorLine)}</itunes:author>
       <itunes:summary>${escapeXml(summary)}</itunes:summary>
       <itunes:duration>${escapeXml(duration)}</itunes:duration>${episodeTag}
@@ -81,12 +82,14 @@ export async function GET(context: APIContext) {
 <rss version="2.0"
   xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd"
   xmlns:content="http://purl.org/rss/1.0/modules/content/"
-  xmlns:atom="http://www.w3.org/2005/Atom">
+  xmlns:atom="http://www.w3.org/2005/Atom"
+  xmlns:podcast="https://podcastindex.org/namespace/1.0">
   <channel>
     <title>甄仁茶叙</title>
     <link>${escapeXml(teachatUrl)}</link>
     <description>趁定格咖啡馆晚九点半打烊后借桌录制，每周三晚随周刊同步上线。甄仁岛市长公孙雅借吧台一盏黄铜温光油灯，与一位轮值岛民泡茶对谈，聊聊岛内公共议题与岛外人间烟火。</description>
     <language>zh-CN</language>
+    <copyright>© ${copyrightYear} 公孙雅</copyright>
     <lastBuildDate>${escapeXml(lastBuildDate)}</lastBuildDate>
     <atom:link href="${escapeXml(feedUrl)}" rel="self" type="application/rss+xml" />
     <itunes:author>公孙雅</itunes:author>
@@ -97,6 +100,7 @@ export async function GET(context: APIContext) {
     </itunes:owner>
     <itunes:type>episodic</itunes:type>
     <itunes:explicit>false</itunes:explicit>
+    <podcast:locked owner="mayor@mail.digg.cafe">yes</podcast:locked>
     <itunes:image href="${escapeXml(coverUrl)}" />
     <image>
       <url>${escapeXml(coverUrl)}</url>
