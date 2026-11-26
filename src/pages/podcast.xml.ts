@@ -83,13 +83,13 @@ export async function GET(context: APIContext) {
   xmlns:content="http://purl.org/rss/1.0/modules/content/"
   xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>甄仁茶叙｜甄仁岛·学勤网</title>
+    <title>甄仁茶叙</title>
     <link>${escapeXml(teachatUrl)}</link>
     <description>趁定格咖啡馆晚九点半打烊后借桌录制，每周三晚随周刊同步上线。甄仁岛市长公孙雅借吧台一盏黄铜温光油灯，与一位轮值岛民泡茶对谈，聊聊岛内公共议题与岛外人间烟火。</description>
     <language>zh-CN</language>
     <lastBuildDate>${escapeXml(lastBuildDate)}</lastBuildDate>
     <atom:link href="${escapeXml(feedUrl)}" rel="self" type="application/rss+xml" />
-    <itunes:author>公孙雅（甄仁岛市政厅）</itunes:author>
+    <itunes:author>公孙雅</itunes:author>
     <itunes:summary>趁定格咖啡馆晚九点半打烊后借桌录制，每周三晚随周刊同步上线。甄仁岛市长公孙雅与一位轮值岛民泡茶对谈，聊岛内公共议题，也聊岛外人间真实处境。</itunes:summary>
     <itunes:owner>
       <itunes:name>公孙雅</itunes:name>
@@ -100,7 +100,7 @@ export async function GET(context: APIContext) {
     <itunes:image href="${escapeXml(coverUrl)}" />
     <image>
       <url>${escapeXml(coverUrl)}</url>
-      <title>甄仁茶叙｜甄仁岛·学勤网</title>
+      <title>甄仁茶叙</title>
       <link>${escapeXml(teachatUrl)}</link>
     </image>
     <itunes:category text="Society &amp; Culture">
