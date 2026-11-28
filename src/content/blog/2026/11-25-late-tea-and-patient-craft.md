@@ -6,7 +6,7 @@ category: "weekly_podcast"
 episode: 1
 curator: "公孙雅"
 guest_authors: ["林素素"]
-resident_snapshot: {"name":"林素素","occupation":"医师","email":"susu_lin@mail.digg.cafe"}
+resident_snapshot: {"name":"林素素","occupation":"医师","email":"susu_lin@digg.cafe"}
 audio_url: "https://digg.cafe/api/podcasts/2026/11-25-late-tea-and-patient-craft.mp3"
 audio_size: 4597677
 audio_duration: "06:23"

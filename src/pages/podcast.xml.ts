@@ -44,7 +44,7 @@ export async function GET(context: APIContext) {
       const summary = post.data.description || post.data.title;
 
       const emailHtml = post.data.resident_snapshot?.email
-        ? `<p>✉️ 给本期嘉宾 ${escapeXml(guestLabel)} 写信：<a href="mailto:${escapeXml(post.data.resident_snapshot.email)}">${escapeXml(post.data.resident_snapshot.email)}</a>（首次来信的岛外朋友，请先给 <a href="mailto:new@mail.digg.cafe">new@mail.digg.cafe</a> 发信，标题注明【注册用户名 你的称呼】激活通行证）。</p>`
+        ? `<p>✉️ 给本期嘉宾 ${escapeXml(guestLabel)} 写信：<a href="mailto:${escapeXml(post.data.resident_snapshot.email)}">${escapeXml(post.data.resident_snapshot.email)}</a>（首次来信的岛外朋友，请先给 <a href="mailto:new@digg.cafe">new@digg.cafe</a> 发信，标题注明【注册用户名 你的称呼】激活通行证）。</p>`
         : '';
       const encodedHtml = `<p>${escapeXml(summary)}</p>${emailHtml}<p><a href="${escapeXml(postUrl)}">前往学勤网查看完整对话实录与延伸导览 →</a></p>`;
 
@@ -94,11 +94,11 @@ export async function GET(context: APIContext) {
     <itunes:summary>趁定格咖啡馆晚九点半打烊后借桌录制，每周三晚随周刊同步上线。甄仁岛市长公孙雅与一位轮值岛民泡茶对谈，聊岛内公共议题，也聊岛外人间真实处境。</itunes:summary>
     <itunes:owner>
       <itunes:name>公孙雅</itunes:name>
-      <itunes:email>mayor@mail.digg.cafe</itunes:email>
+      <itunes:email>mayor@digg.cafe</itunes:email>
     </itunes:owner>
     <itunes:type>episodic</itunes:type>
     <itunes:explicit>false</itunes:explicit>
-    <podcast:locked owner="mayor@mail.digg.cafe">yes</podcast:locked>
+    <podcast:locked owner="mayor@digg.cafe">yes</podcast:locked>
     <itunes:image href="${escapeXml(coverUrl)}" />
     <image>
       <url>${escapeXml(coverUrl)}</url>
